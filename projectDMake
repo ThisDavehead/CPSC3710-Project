@@ -1,0 +1,18 @@
+INCLUDE = -I/usr/include/
+LIBDIR  = -L/usr/lib/
+
+COMPILERFLAGS = -Wall -std=c99
+CC = gcc
+CFLAGS = $(COMPILERFLAGS) $(INCLUDE)
+LIBRARIES = -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm
+
+All: projectD 
+
+projectD: projectD.o
+	$(CC) $(CFLAGS) -o $@ $(LIBDIR) $< $(LIBRARIES)
+
+clean:
+	rm -rf *.o *~
+
+clean-all: clean
+	   rm -rf projectD
