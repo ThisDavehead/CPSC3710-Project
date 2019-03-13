@@ -27,6 +27,8 @@ int LeftMouse;
 // Global variables to keep track of the x and z location of the robot
 // as well as the LookAt, the z-coordinate of which is initialized to zRobot + 5.0
 ///////// Note: As the robot becomes able to turn, the camera must follow.
+//////// Addendum: Unless we choose to rotate the world and always just move the Robot in the same direction
+//////// along the z-axis
 float XRobot = 0.0f;
 float ZRobot = 0.0f;
 
@@ -34,6 +36,7 @@ float ZRobot = 0.0f;
 // When the head is being drawn, its rotation can be derived from this,
 // depending on the input.
 float Y_Rot = 0.0f;
+float AntennaRot = 0.0f;
 
 // Globabl variable to keep track of pausing.
 int Pause = -1;
@@ -75,12 +78,12 @@ void display()
    // Clear the color and depth buffers.
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-   // Draw the robot. Placeholder cube for now. I can do this.
+   // Draw the robot.
    glPushMatrix();
-   glTranslatef(0, -1, 0);
+   glTranslatef(-XRobot, -1, -ZRobot);
    glColor4f(0.2f, 0.1f, 0.9f, 0.7f);
    glutSolidCube(2);
-   glTranslatef(0, 1, 0);
+   glTranslatef(XRobot, 1, ZRobot);
    glPopMatrix();
 
    // None of the city-drawing stuff works yet. Sorry.
@@ -112,11 +115,8 @@ void display()
       glPopMatrix();
    }
 
-   // Rotate the world according to the Robot's orientation.
-   glRotatef(Y_Rot, 0.0f, 1.0f, 0.0f);
-
-   // Move world to new origin
-   glTranslatef(XRobot, 0.0f, ZRobot);
+   // Rotate the world according to the Robot's orientation, rather than rotating the robot.
+   glRotatef(-Y_Rot, 0.0f, 1.0f, 0.0f);
    
    glLoadIdentity();
 
