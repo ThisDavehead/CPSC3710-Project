@@ -88,7 +88,8 @@ void display()
 
    // None of the city-drawing stuff works yet. Sorry.
    // Draw the 20 x 20 city blocks with various buildings. I don't know how to do this.
-
+   // Rotate the matrix back to origin so we can draw the robot normally and move it in the same direction.
+   glRotatef(Y_Rot, 0.0f, 1.0f, 0.0f);
    // Draw the streets parallel to z axis.
    for (int i = (0 - XBlockNum/2)*XBlockSize; i < (XBlockNum / 2) *XBlockSize; i += XBlockSize)
    {
