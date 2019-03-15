@@ -1,0 +1,27 @@
+--How To Run--
+
+make -f BootMake
+./Boot
+
+--TODO--
+
+DOCUMENT:
+***Email Matthew.davison@uleth.ca for help
+Doxygen
+Written manual(Reword project assignment doc)
+
+CODE:
+
+fix F2 and F3 relese behaviour
+
+Extract Robot attributes and functions from Boot to a Robot Class
+
+Add Block class
++5 buildings
++click listener for shooting http://www.cs.uleth.ca/~zhang/teaching/cpsc3710/samples/pickselect.html
++draw()
+
+Add Street class
++draw()
++checkIfIntersection()
+	
