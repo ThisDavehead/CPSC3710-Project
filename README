@@ -12,8 +12,6 @@ Written manual(Reword project assignment doc)
 
 CODE:
 
-fix F2 and F3 relese behaviour
-
 Extract Robot attributes and functions from Boot to a Robot Class
 
 Add Block class
