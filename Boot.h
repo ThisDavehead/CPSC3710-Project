@@ -24,6 +24,6 @@ class Boot
     static void CallBackResizeScene(int Width, int Height);
     static void mouseFunctionality(int buttonNum, int btnState, int x, int y);
     static void MyInit(int Width, int Height);
+    static void specKeyUp(int key, int x, int y);
 };
-
 #endif /*BOOT_H_*/

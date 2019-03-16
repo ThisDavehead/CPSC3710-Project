@@ -435,6 +435,17 @@
     }
   }
 
+//Indicates an action to be taken when a special key is released
+  void Boot::specKeyUp(int key, int x, int y){
+    switch (key) {
+      case GLUT_KEY_F2:
+      robotHead=0;
+      break;
+      case GLUT_KEY_F3:
+      robotHead=0;
+      break;
+    }
+}
   ////////////////////////////////////////////////////////
   //   Setup your program before passing the control    //
   //   to the main OpenGL event loop.                   //
@@ -505,6 +516,8 @@
      glutKeyboardFunc(&Boot::myCBKey);
      //mousefunction
      glutMouseFunc(&Boot::mouseFunctionality);
+
+     glutSpecialUpFunc(&Boot::specKeyUp);
      // OK, OpenGL's ready to go.  Let's call our own init function.
      Boot::MyInit(Boot::Window_Width, Boot::Window_Height);
 
