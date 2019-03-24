@@ -90,6 +90,14 @@ Robot Boot::robot = Robot();
      newBlock.draw();
      glPopMatrix();
      //Robot
+          //draw the street netwoek
+     glLoadIdentity();
+     glPushMatrix();
+     glColor3f( 1.0f, 1.0f, 1.0f );
+     Street network;
+     glTranslatef(0.0f, -3.15, 0.0f);
+     network.draw();
+     glPopMatrix();
      glutSwapBuffers();
 
      // Now let's do the motion calculations.
@@ -277,7 +285,17 @@ Robot Boot::robot = Robot();
       }
     }
   }
-
+//Indicates an action to be taken when a special key is released
+  void Boot::specKeyUp(int key, int x, int y){
+    switch (key) {
+      case GLUT_KEY_F2:
+      robot.head=0;
+      break;
+      case GLUT_KEY_F3:
+      robot.head=0;
+      break;
+    }
+}
   ////////////////////////////////////////////////////////
   //   Setup your program before passing the control    //
   //   to the main OpenGL event loop.                   //
@@ -344,6 +362,8 @@ Robot Boot::robot = Robot();
      // Register and install the callback function for
      // Some keys and special keys.
      glutSpecialFunc(&Boot::mySpecialKey);
+
+     glutSpecialUpFunc(&Boot::specKeyUp);
 
      glutKeyboardFunc(&Boot::myCBKey);
      //mousefunction
