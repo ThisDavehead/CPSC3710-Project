@@ -9,10 +9,6 @@
 #define PROGRAM_TITLE "Project"
 
 #include "Boot.h"
-#include "Block.h"
-#include "Building.h"
-#include "Street.h"
-#include <cmath>
 
   // Some global variables.
   // Window IDs, window width and height
@@ -24,166 +20,9 @@
   int Boot::zcentre = 5;
   float Boot::eyePoint[3] = {4, 4, 4};
 
-  /*TODO Extract this into Robot class*/
-  int robotHead = 0; // 0 normal 1 left 2 right
-  int robotPoint[3] = {0, 0, 0}; // center point
-  float robotCentreToFeet = -3.15f;
-  /**
-  */
-  void createCircle(float radius, int x, int y){
-    float x1,y1,x2,y2;
-    float angle;
-    x1 =x,y1=y;
-    glBegin(GL_TRIANGLE_FAN);
-    glVertex3f(x1,y1,0.0f);
-    for (angle=1.0f;angle<3*3.14159;angle+=0.2)
-    {
-        x2 = x1+sin(angle)*radius;
-        y2 = y1+cos(angle)*radius;
-        glVertex3f(x2,y2, 0.0f);
-    }
-    glEnd();
-    //thanks to https://www.codeproject.com/Questions/64657/how-to-draw-a-filled-circle-in-opengl
-  }
-  /**
-  */
-  void createTriangle(float width, float height){
-    glBegin(GL_TRIANGLES);
-      glVertex3f(0.0f, (height/2), 0.0f);
-      glVertex3f((width/2), -(height/2), 0.0f);
-      glVertex3f(-(width/2), -(height/2), 0.0f);
-    glEnd();
-  }
-  void createRectangle(float width, float height){
-    glBegin(GL_QUADS);
-      glVertex3f((width/2), -(height/2), 0.0f);
-      glVertex3f(-(width/2), -(height/2), 0.0f);
-      glVertex3f(-(width/2), (height/2), 0.0f);
-      glVertex3f((width/2), (height/2), 0.0f);
-    glEnd();
-  }
-  /**
-  */
-  void createBox(float width, float height, float depth){
-     glBegin(GL_QUADS);
-        // Far face.
-        glNormal3f( 0.0f, 0.0f, -(depth/2));
+  // Global variable for our robot;
+Robot Boot::robot = Robot();
 
-      glVertex3f(-(width/2), -(height/2.0f), -(depth/2));
-      glVertex3f(-(width/2),  (height/2.0f), -(depth/2));
-      glVertex3f((width/2),  (height/2.0f), -(depth/2));
-      glVertex3f((width/2), -(height/2.0f), -(depth/2));
-
-        // Right face.
-        glNormal3f((width/2), 0.0f, 0.0f);
-
-      glVertex3f((width/2), -(height/2.0f), -(depth/2));
-      glVertex3f((width/2),  (height/2.0f), -(depth/2));
-      glVertex3f((width/2),  (height/2.0f),  (depth/2));
-      glVertex3f((width/2), -(height/2.0f),  (depth/2));
-
-        // Front face; offset.
-        glNormal3f( 0.0f, 0.0f, (depth/2));
-
-      glVertex3f(-(width/2), -(height/2.0f),  (depth/2));
-      glVertex3f((width/2), -(height/2.0f),  (depth/2));
-      glVertex3f((width/2),  (height/2.0f),  (depth/2));
-      glVertex3f(-(width/2),  (height/2.0f),  (depth/2));
-
-
-        // Left Face; offset.
-        glNormal3f(-(depth/2), 0.0f, 0.0f);
-
-      glVertex3f(-(width/2), -(height/2.0f), -(depth/2));
-      glVertex3f(-(width/2), -(height/2.0f),  (depth/2));
-      glVertex3f(-(width/2),  (height/2.0f),  (depth/2));
-      glVertex3f(-(width/2),  (height/2.0f), -(depth/2));
-
-
-        // Top Face; offset.
-        glNormal3f(0.0f,(depth/2), 0.0f);
-
-      glVertex3f((width/2), (height/2.0f), -(depth/2));
-      glVertex3f((width/2),  (height/2.0f),  (depth/2));
-      glVertex3f(-(width/2), (height/2.0f),  (depth/2));
-      glVertex3f(-(width/2),  (height/2.0f), -(depth/2));
-
-        // Bottom Face; offset.
-        glNormal3f(0.0f, -(depth/2), 0.0f);
-
-      glVertex3f((width/2), -(height/2.0f), -(depth/2));
-      glVertex3f((width/2),  -(height/2.0f),  (depth/2));
-      glVertex3f(-(width/2), -(height/2.0f),  (depth/2));
-      glVertex3f(-(width/2), -(height/2.0f), -(depth/2));
-
-        // All polygons have been drawn.
-    glEnd();
-  }
-  /**
-  */
-  void drawRobot(float robotX, float robotY, float robotZ){
-
-    GLUquadricObj *neck = gluNewQuadric();
-    GLUquadricObj *antenna = gluNewQuadric();
-
-
-    glLoadIdentity();
-    glTranslatef(robotX, 0.4f+robotY, robotZ);
-    if(robotHead == 1){
-        glRotatef(90.0f, 0.0f, 1.0f, 0.0f); //Left head
-    }else if(robotHead == 2){
-        glRotatef(-90.0f, 0.0f, 1.0f, 0.0f); //Right head
-    }
-
-    glColor3f( 0.3f, 0.3f, 0.3f );
-    createBox(0.8f,0.8f,0.8f); //head center
-
-
-    glTranslatef(-0.2f, 0.0f, 0.42f);
-    glColor3f( 0.8f, 0.8f, 0.8f);
-    createCircle(0.1f, 0.0f, 0.0f);
-    glColor3f( 0.8f, 0.1f, 0.1f);
-    glTranslatef(0.0f, 0.0f, 0.02f);
-    createCircle(0.08f, 0.0f, 0.0f);
-    glTranslatef(0.0f, 0.0f, -0.02f);
-    glTranslatef(0.2f, 0.0f, -0.42f);
-    glTranslatef(0.2f, 0.0f, 0.42f);
-    glColor3f( 0.8f, 0.8f, 0.8f);
-    createCircle(0.1f, 0.0f, 0.0f);
-    glColor3f( 0.8f, 0.1f, 0.1f);
-    glTranslatef(0.0f, 0.0f, 0.02f);
-    createCircle(0.08f, 0.0f, 0.0f);
-    glTranslatef(0.0f, 0.0f, -0.02f);
-    glTranslatef(-0.2f, 0.0f, -0.42f);
-
-    glTranslatef(0.0f, 0.6f, 0.0f); // to antena center
-    glColor3f( 0.4f, 0.4f, 0.4f );
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    gluCylinder(antenna,0.1f,0.1f,0.4f,15,15);
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-
-    glLoadIdentity();
-    glTranslatef(robotX, 0.0f+robotY, robotZ);
-    //glRotatef(180.0f, 0.0f, 1.0f, 0.0f);// Back Body
-    glColor3f( 0.4f, 0.4f, 0.4f );
-    /*  glTranslatef(0.0f, -0.15f, 0.0f); // to neck from antena center*/
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    gluCylinder(neck,0.3f,0.3f,0.3f,15,15);
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-
-    glColor3f( 0.3f, 0.3f, 0.3f );
-    glTranslatef(0.0f, -1.15f, 0.0f);
-    createBox(1.0f,2.0f,1.0f);
-    glTranslatef(0.0f, 0.0f, 0.52f);
-    glColor3f( 0.6f, 0.6f, 0.6f );
-    createRectangle(0.7f, 1.7f);
-    glTranslatef(0.0f, 0.0f, -0.52f);
-    glTranslatef(0.0f, 0.3f, -0.52f);
-    createTriangle(0.5f, 0.5f);
-    glTranslatef(0.0f, -0.6f, 0.0f);
-    createTriangle(0.5f, 0.5f);
-
-  }
   /////////////////////////////////////////////////////////
   // Routine which actually does the drawing             //
   /////////////////////////////////////////////////////////
@@ -201,14 +40,14 @@
      glLoadIdentity();
 
      glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 60.0);
-     gluLookAt(robotPoint[0] + Boot::eyePoint[0], robotPoint[1] + Boot::eyePoint[1] , robotPoint[2] + Boot::eyePoint[2], robotPoint[0], robotPoint[1]+1, robotPoint[2], 0,1,0);
+     gluLookAt(robot.point[0] + Boot::eyePoint[0], robot.point[1] + Boot::eyePoint[1] , robot.point[2] + Boot::eyePoint[2], robot.point[0], robot.point[1]+1, robot.point[2], 0,1,0);
 
 
      // Need to manipulate the ModelView matrix to move our model around.
      glMatrixMode(GL_MODELVIEW);
      //TODO extract the robot code to class and building draw to block class
      glPushMatrix();
-     drawRobot(robotPoint[0],robotPoint[1],robotPoint[2]);
+     robot.draw(robot.point[0],robot.point[1],robot.point[2]);
      glPopMatrix();
 
      glLoadIdentity();
@@ -251,15 +90,6 @@
      newBlock.draw();
      glPopMatrix();
      //Robot
-
-     //draw the street netwoek
-     glLoadIdentity();
-     glPushMatrix();
-     glColor3f( 1.0f, 1.0f, 1.0f );
-     Street network;
-     glTranslatef(0.0f, -3.15, 0.0f);
-     network.draw();
-     glPopMatrix();
      glutSwapBuffers();
 
      // Now let's do the motion calculations.
@@ -309,77 +139,80 @@
   * @return void
   */
   void Boot::mySpecialKey(int key, int x, int y){
-    switch(key){
-      case GLUT_KEY_F1:
-      //forward head facing and default lookat
-      robotHead = 0;
-      Boot::eyePoint[0] = 0;
-      Boot::eyePoint[1] = 3;
-      Boot::eyePoint[2] = -4;
-      break;
-      case GLUT_KEY_F2:
-      //right head facing
-        robotHead = 2;
-      break;
-      case GLUT_KEY_F3:
-      //left head facing
-        robotHead = 1;
-      break;
-      case GLUT_KEY_F4:
-      //default lookat
-      Boot::eyePoint[0] = 0;
-      Boot::eyePoint[1] = 3;
-      Boot::eyePoint[2] = -4;
-      break;
-      case GLUT_KEY_F5:
-      //behind on left of robot
-      Boot::eyePoint[0] = 4;
-      Boot::eyePoint[1] = 4;
-      Boot::eyePoint[2] = -4;
-      break;
-      case GLUT_KEY_F6:
-      //behind on right of robot
-      Boot::eyePoint[0] = -4;
-      Boot::eyePoint[1] = 4;
-      Boot::eyePoint[2] = -4;
-      break;
-      case GLUT_KEY_F7:
-      //front on righ of robot
-      Boot::eyePoint[0] = -4;
-      Boot::eyePoint[1] = 4;
-      Boot::eyePoint[2] = 4;
-      break;
-      case GLUT_KEY_F8:
-      //front on left of robot
-      Boot::eyePoint[0] = 4;
-      Boot::eyePoint[1] = 4;
-      Boot::eyePoint[2] = 4;
-      break;
-      case GLUT_KEY_F9:
-      //behind on left of robot
-      Boot::eyePoint[0] = 8;
-      Boot::eyePoint[1] = 8;
-      Boot::eyePoint[2] = -8;
-      break;
-      case GLUT_KEY_F10:
-      //behind on right of robot
-      Boot::eyePoint[0] = -8;
-      Boot::eyePoint[1] = 8;
-      Boot::eyePoint[2] = -8;
-      break;
-      case GLUT_KEY_F11:
-      //front on right of robot
-      Boot::eyePoint[0] = -8;
-      Boot::eyePoint[1] = 8;
-      Boot::eyePoint[2] = 8;
-      break;
-      case GLUT_KEY_F12:
-      //behind on left of robot
-      Boot::eyePoint[0] = 8;
-      Boot::eyePoint[1] = 8;
-      Boot::eyePoint[2] = 8;
-      break;
+     switch(key){
+	case GLUT_KEY_F1:
+	   //forward head facing and default lookat
+	   robot.head = 0;
+	   Boot::eyePoint[0] = 0;
+	   Boot::eyePoint[1] = 3;
+	   Boot::eyePoint[2] = -4;
+	   break;
+	case GLUT_KEY_F2:
+	   //right head facing
+	   robot.head = 2;
+	   break;
+	case GLUT_KEY_F3:
+	   //left head facing
+	   robot.head = 1;
+	   break;
+	case GLUT_KEY_F4:
+	   //default lookat
+	   Boot::eyePoint[0] = 0;
+	   Boot::eyePoint[1] = 3;
+	   Boot::eyePoint[2] = -4;
+	   break;
+	case GLUT_KEY_F5:
+	   //behind on left of robot
+	   Boot::eyePoint[0] = 4;
+	   Boot::eyePoint[1] = 4;
+	   Boot::eyePoint[2] = -4;
+	   break;
+	case GLUT_KEY_F6:
+	   //behind on right of robot
+	   Boot::eyePoint[0] = -4;
+	   Boot::eyePoint[1] = 4;
+	   Boot::eyePoint[2] = -4;
+	   break;
+	case GLUT_KEY_F7:
+	   //front on righ of robot
+	   Boot::eyePoint[0] = -4;
+	   Boot::eyePoint[1] = 4;
+	   Boot::eyePoint[2] = 4;
+	   break;
+	case GLUT_KEY_F8:
+	   //front on left of robot
+	   Boot::eyePoint[0] = 4;
+	   Boot::eyePoint[1] = 4;
+	   Boot::eyePoint[2] = 4;
+	   break;
+	case GLUT_KEY_F9:
+	   //behind on left of robot
+	   Boot::eyePoint[0] = 8;
+	   Boot::eyePoint[1] = 8;
+	   Boot::eyePoint[2] = -8;
+	   break;
+	case GLUT_KEY_F10:
+	   //behind on right of robot
+	   Boot::eyePoint[0] = -8;
+	   Boot::eyePoint[1] = 8;
+	   Boot::eyePoint[2] = -8;
+	   break;
+	case GLUT_KEY_F11:
+	   //front on right of robot
+	   Boot::eyePoint[0] = -8;
+	   Boot::eyePoint[1] = 8;
+	   Boot::eyePoint[2] = 8;
+	   break;
+	case GLUT_KEY_F12:
+	   //behind on left of robot
+	   Boot::eyePoint[0] = 8;
+	   Boot::eyePoint[1] = 8;
+	   Boot::eyePoint[2] = 8;
+	   break;
+	default:
+	   break;
     }
+
 
   }
   ///////////////////////////////////////////////////////////////
@@ -445,17 +278,6 @@
     }
   }
 
-//Indicates an action to be taken when a special key is released
-  void Boot::specKeyUp(int key, int x, int y){
-    switch (key) {
-      case GLUT_KEY_F2:
-      robotHead=0;
-      break;
-      case GLUT_KEY_F3:
-      robotHead=0;
-      break;
-    }
-}
   ////////////////////////////////////////////////////////
   //   Setup your program before passing the control    //
   //   to the main OpenGL event loop.                   //
@@ -526,8 +348,6 @@
      glutKeyboardFunc(&Boot::myCBKey);
      //mousefunction
      glutMouseFunc(&Boot::mouseFunctionality);
-
-     glutSpecialUpFunc(&Boot::specKeyUp);
      // OK, OpenGL's ready to go.  Let's call our own init function.
      Boot::MyInit(Boot::Window_Width, Boot::Window_Height);
 
