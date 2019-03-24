@@ -11,6 +11,7 @@
 #include "Boot.h"
 #include "Block.h"
 #include "Building.h"
+#include "Street.h"
 #include <cmath>
 
   // Some global variables.
@@ -250,6 +251,15 @@
      newBlock.draw();
      glPopMatrix();
      //Robot
+
+     //draw the street netwoek
+     glLoadIdentity();
+     glPushMatrix();
+     glColor3f( 1.0f, 1.0f, 1.0f );
+     Street network;
+     glTranslatef(0.0f, -3.15, 0.0f);
+     network.draw();
+     glPopMatrix();
      glutSwapBuffers();
 
      // Now let's do the motion calculations.
