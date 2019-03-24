@@ -9,4 +9,4 @@ LIBRARIES = -lX11 -lXi -lXmu -lglut -lGL -lGLU -lm
 All: project
 
 project: Boot.o
-	$(CC) $(CFLAGS) -lglut -lGLU -lGL  Boot.cpp Building.cpp Block.cpp Street.cpp -o Boot
+	$(CC) $(CFLAGS) -lglut -lGLU -lGL  Boot.cpp Building.cpp Block.cpp Robot.cpp Street.cpp -o Boot
