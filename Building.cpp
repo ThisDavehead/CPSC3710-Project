@@ -1,6 +1,11 @@
 #include "Building.h"
 #include <cmath>
 
+int Building::health;
+void Building::attack(){
+   --health;
+}
+
 void Building::createBox(float width, float height, float depth){
    glBegin(GL_QUADS);
       // Far face.
