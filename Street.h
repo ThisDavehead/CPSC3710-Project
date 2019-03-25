@@ -7,11 +7,15 @@
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
 #include <GL/glut.h> // GLUT support library.
+#include <cmath>
 
 class Street{
   public:
    void draw();
-   bool checkIfIntersection(float xpos, float ypos);
+   bool checkIfIntersection(const float xpos, float pos);
+   const float getBlockLength();
+   const float getWidth();
+   const int getSize();
   private:
    static const float width = 10.0;
    static const int citySize = 20;

@@ -23,6 +23,9 @@
   // Global variable for our robot;
 Robot Boot::robot = Robot();
 
+//Global variable for the Street network
+Street network;
+
   /////////////////////////////////////////////////////////
   // Routine which actually does the drawing             //
   /////////////////////////////////////////////////////////
@@ -41,7 +44,6 @@ Robot Boot::robot = Robot();
 
      glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 60.0);
      gluLookAt(robot.point[0] + Boot::eyePoint[0], robot.point[1] + Boot::eyePoint[1] , robot.point[2] + Boot::eyePoint[2], robot.point[0], robot.point[1]+1, robot.point[2], 0,1,0);
-
 
      // Need to manipulate the ModelView matrix to move our model around.
      glMatrixMode(GL_MODELVIEW);
@@ -84,6 +86,8 @@ Robot Boot::robot = Robot();
 
      glLoadIdentity();
      glPushMatrix();
+     //Move the Block inside the street network
+     glTranslatef(-25,0,25);
      glColor3f( 0.2f, 0.2f, 0.2f );
      Block newBlock;
      glTranslatef(0.0f, -3.15, 0.0f);
@@ -94,7 +98,7 @@ Robot Boot::robot = Robot();
      glLoadIdentity();
      glPushMatrix();
      glColor3f( 1.0f, 1.0f, 1.0f );
-     Street network;
+
      glTranslatef(0.0f, -3.15, 0.0f);
      network.draw();
      glPopMatrix();
