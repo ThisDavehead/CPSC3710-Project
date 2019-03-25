@@ -18,8 +18,8 @@ Add Block class
 +draw()
 
 Add Street class
-+draw()
-+checkIfIntersection()
++draw()<-Draws one street, not the entire city network, probably better to use mulitple calls in either Boot or a new city class to make the network
++checkIfIntersection() <-Still empty
 
 
 // Possibility: Add City class which consists of 20 x 20 blocks and a street between each.
