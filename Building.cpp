@@ -1,7 +1,6 @@
 #include "Building.h"
 #include <cmath>
 
-int Building::health;
 void Building::attack(){
    --health;
 }

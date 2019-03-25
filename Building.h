@@ -11,6 +11,8 @@
 class Building
 {
   public:
+   int health;
+   void attack();
     void draw();
     void createBox(float width, float height, float depth);
 };
