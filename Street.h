@@ -11,7 +11,7 @@
 class Street{
   public:
    void draw();
-   bool checkIfIntersection();
+   bool checkIfIntersection(float xpos, float ypos);
   private:
    static const float width = 10.0;
    static const int citySize = 20;
