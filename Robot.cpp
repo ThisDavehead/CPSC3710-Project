@@ -103,8 +103,8 @@ void Robot::draw(float x, float y, float z){
     GLUquadricObj *antenna = gluNewQuadric();
 
 
-    glLoadIdentity();
-    glTranslatef(x, 0.4f+y, x);
+    glTranslatef(x, 0.4f+y, z);
+    glRotatef(90.0f*facing, 0, 1.0, 0);
     if(head == 0){
        glRotatef(0.0f, 0.0f, 1.0f, 0.0f); //Centre head
     }
@@ -144,8 +144,7 @@ void Robot::draw(float x, float y, float z){
     gluCylinder(antenna,0.1f,0.1f,0.4f,15,15);
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
 
-    glLoadIdentity();
-    glTranslatef(x, 0.0f+y, z);
+    glTranslatef(0, y-1.0f, 0);
     //glRotatef(180.0f, 0.0f, 1.0f, 0.0f);// Back Body
     glColor3f( 0.4f, 0.4f, 0.4f );
     /*  glTranslatef(0.0f, -0.15f, 0.0f); // to neck from antena center*/
@@ -164,4 +163,32 @@ void Robot::draw(float x, float y, float z){
     createTriangle(0.5f, 0.5f);
     glTranslatef(0.0f, -0.6f, 0.0f);
     createTriangle(0.5f, 0.5f);
+
+    glRotatef(-90.0f*facing, 0, 1.0, 0);
+}
+
+void Robot::move(){
+    //if((point[0] > -5 && point[0] < 1000) && (point[2] > -5 && point[2] < 1000)){
+    if(facing == 0.0f && point[2] < 999){
+      point[2] += 1;
+    } else if(facing == 1.0f && point[0] < 4){
+      point[0] += 1;
+    } else if(facing == -1.0f && point[0] > -999){
+      point[0] -= 1;
+    } else if((facing == 2.0f || facing == -2.0f) && point[2] > -4){
+      point[2] -= 1;
+    }
+}
+
+void Robot::right(){
+  facing -= 1.0f;
+  if(facing < -2.0f){
+    facing = -(float)(((int)facing) % 2);
+  }
+}
+void Robot::left(){
+  facing += 1.0f;
+  if(facing > 2.0f){
+    facing = -(float)(((int)facing) % 2);
+  }
 }

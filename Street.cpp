@@ -1,4 +1,8 @@
 #include "Street.h"
+#include <stdlib.h>  // Useful for the following includes.
+#include <stdio.h>
+#include <iostream>
+#include <cstdlib>
 ///Draws the street network
 ///@author Jeff Deurloo
 void Street::draw(){
@@ -52,7 +56,11 @@ void Street::draw(){
  @author Jeff Deurloo
 */
 bool Street::checkIfIntersection(const float xpos, const float zpos){
-    if(fmod(xpos,blockLength)==0 && fmod(zpos,blockLength)==0)
+    printf ("Point %f %f.\n", xpos, zpos);
+    printf ("PointMod %f %f.\n", fmod(xpos,blockLength), fmod(zpos,blockLength));
+    bool x = (abs(fmod(xpos,blockLength)) < 5 || abs(fmod(xpos,blockLength)) > blockLength-5) || (fmod(xpos,blockLength) > -5 && fmod(xpos,blockLength) < 5);
+    bool z = (abs(fmod(zpos,blockLength)) < 5 || abs(fmod(zpos,blockLength)) > blockLength-5) || (fmod(zpos,blockLength) > -5 && fmod(zpos,blockLength) < 5);
+    if(x && z)
         return true;
     else
         return false;

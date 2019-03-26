@@ -21,10 +21,8 @@
   float Boot::eyePoint[3] = {4, 4, 4};
 
   // Global variable for our robot;
-Robot Boot::robot = Robot();
-
-//Global variable for the Street network
-Street network;
+  Robot Boot::robot = Robot();
+  Street Boot::network = Street();
 
   /////////////////////////////////////////////////////////
   // Routine which actually does the drawing             //
@@ -45,61 +43,60 @@ Street network;
      glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 60.0);
      gluLookAt(robot.point[0] + Boot::eyePoint[0], robot.point[1] + Boot::eyePoint[1] , robot.point[2] + Boot::eyePoint[2], robot.point[0], robot.point[1]+1, robot.point[2], 0,1,0);
 
+
      // Need to manipulate the ModelView matrix to move our model around.
      glMatrixMode(GL_MODELVIEW);
-     //TODO extract the robot code to class and building draw to block class
+
      glPushMatrix();
+     glLoadIdentity();
      robot.draw(robot.point[0],robot.point[1],robot.point[2]);
      glPopMatrix();
 
-     glLoadIdentity();
+     /*glLoadIdentity();
      glPushMatrix();
      glColor3f( 0.2f, 0.3f, 0.2f);
-     Building newBuild;
+     //Building newBuild = Building(5,5);
      glTranslatef(-10.0f, 10.0f, 10.0f);
-     newBuild.draw();
+     //newBuild.draw();
      glPopMatrix();
 
      glLoadIdentity();
      glPushMatrix();
      glColor3f( 0.3f, 0.2f, 0.2f );
-     Building newBuild1;
+     //Building newBuild1 = Building(5,15);
      glTranslatef(-10.0f, 10.0f, -8.0f);
-     newBuild1.draw();
+     //newBuild1.draw();
      glPopMatrix();
 
      glLoadIdentity();
      glPushMatrix();
      glColor3f( 0.2f, 0.2f, 0.3f );
-     Building newBuild3;
+     //Building newBuild3 = Building(15, 5);
      glTranslatef(15.0f, 10.0f, -8.0f);
-     newBuild3.draw();
+     //newBuild3.draw();
      glPopMatrix();
 
      glLoadIdentity();
      glPushMatrix();
      glColor3f( 0.2f, 0.3f, 0.3f);
-     Building newBuild4;
+     //Building newBuild4 = Building(20,20);
      glTranslatef(15.0f, 10.0f, 8.0f);
-     newBuild4.draw();
+     //newBuild4.draw();
      glPopMatrix();
 
      glLoadIdentity();
      glPushMatrix();
-     //Move the Block inside the street network
-     glTranslatef(-25,0,25);
      glColor3f( 0.2f, 0.2f, 0.2f );
-     Block newBlock;
+    // Block newBlock;
      glTranslatef(0.0f, -3.15, 0.0f);
-     newBlock.draw();
+     //newBlock.draw();
      glPopMatrix();
-     //Robot
+     //Robot */
           //draw the street netwoek
      glLoadIdentity();
      glPushMatrix();
-     glColor3f( 1.0f, 1.0f, 1.0f );
-
-     glTranslatef(0.0f, -3.15, 0.0f);
+     glColor3f( 0.5f, 0.2f, 0.2f );
+     glTranslatef(0.0f, -2.15, 0.0f);
      network.draw();
      glPopMatrix();
      glutSwapBuffers();
@@ -121,13 +118,21 @@ Street network;
   {
      switch (key) {
         case 113: // q turn left on intersect
-
+        if(network.checkIfIntersection(robot.point[0],robot.point[2])){
+          robot.left();
+        }
   	 break;
+     case 114:  // r reset
+         robot.point[0] = 0;
+         robot.point[2] = 0;
+     break;
         case 97:  // a turn right on intersect
-
+          if(network.checkIfIntersection(robot.point[0],robot.point[2])){
+            robot.right();
+          }
   	 break;
         case 122: // z push forward
-
+          robot.move();
      break;
          case 101:  // e
          glEnable(GL_DEPTH_TEST);
@@ -327,6 +332,8 @@ Street network;
      rightDown = 0;
      leftDown = 0;
      zcentre = 5;
+     //set up blocks
+
 
      // Load up the correct perspective matrix; using a callback directly.
      Boot::CallBackResizeScene(Width,Height);
