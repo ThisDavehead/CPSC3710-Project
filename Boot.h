@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>  // For spring operations.
 #include <cmath>
+#include <vector>
 #include <GL/gl.h>   // OpenGL itself.
 #include <GL/glu.h>  // GLU support library.
 #include <GL/glut.h> // GLUT support library.
@@ -23,6 +24,8 @@ class Boot
     static int leftDown;
     static int zcentre;
     static Robot robot;
+    static Street network;
+    static std::vector<Block*> blocks;
     static float eyePoint[3];
     static void CallBackRenderScene(void);
     static void myCBKey(unsigned char key, int x, int y);

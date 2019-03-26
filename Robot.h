@@ -13,6 +13,7 @@ class Robot
   public:
    int head;  // direction the robot's head is facing: 0 normal 1 left 2 right
    int point[3]; // center point
+   float facing;
    float centreToFeet;
    Robot();
    void createCircle(float radius, int x, int y);
@@ -20,6 +21,9 @@ class Robot
    void createRectangle(float width, float height);
    void createBox(float width, float height, float depth);
    void draw(float x, float y, float z);
+   void move();
+   void right();
+   void left();
 };
 
 #endif /*ROBOT_H_*/
