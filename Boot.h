@@ -23,10 +23,12 @@ class Boot
     static int rightDown;
     static int leftDown;
     static int zcentre;
+    static int viewKey;
     static Robot robot;
     static Street network;
-    static std::vector<Block*> blocks;
+    static Block *blocks;
     static float eyePoint[3];
+    static void rotateCameras();
     static void CallBackRenderScene(void);
     static void myCBKey(unsigned char key, int x, int y);
     static void mySpecialKey(int key, int x, int y);

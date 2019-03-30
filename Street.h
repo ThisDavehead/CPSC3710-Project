@@ -17,9 +17,9 @@ class Street{
    const float getWidth();
    const int getSize();
   private:
-   static const float width = 10.0;
+   static const float width = 4.0;
    static const int citySize = 20;
-   static const float blockLength = 50.0;
+   static const float blockLength = 44.0;
 };
 
 #endif

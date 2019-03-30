@@ -45,7 +45,7 @@ void Robot::createRectangle(float width, float height){
 void Robot::createBox(float width, float height, float depth){
      glBegin(GL_QUADS);
         // Far face.
-        glNormal3f( 0.0f, 0.0f, -(depth/2));
+        glNormal3f( 0.0f, 0.0f, -1.0f);
 
       glVertex3f(-(width/2), -(height/2.0f), -(depth/2));
       glVertex3f(-(width/2),  (height/2.0f), -(depth/2));
@@ -53,7 +53,7 @@ void Robot::createBox(float width, float height, float depth){
       glVertex3f((width/2), -(height/2.0f), -(depth/2));
 
         // Right face.
-        glNormal3f((width/2), 0.0f, 0.0f);
+        glNormal3f(1.0f, 0.0f, 0.0f);
 
       glVertex3f((width/2), -(height/2.0f), -(depth/2));
       glVertex3f((width/2),  (height/2.0f), -(depth/2));
@@ -61,7 +61,7 @@ void Robot::createBox(float width, float height, float depth){
       glVertex3f((width/2), -(height/2.0f),  (depth/2));
 
         // Front face; offset.
-        glNormal3f( 0.0f, 0.0f, (depth/2));
+        glNormal3f( 0.0f, 0.0f, 1.0f);
 
       glVertex3f(-(width/2), -(height/2.0f),  (depth/2));
       glVertex3f((width/2), -(height/2.0f),  (depth/2));
@@ -70,7 +70,7 @@ void Robot::createBox(float width, float height, float depth){
 
 
         // Left Face; offset.
-        glNormal3f(-(depth/2), 0.0f, 0.0f);
+        glNormal3f(-1.0f, 0.0f, 0.0f);
 
       glVertex3f(-(width/2), -(height/2.0f), -(depth/2));
       glVertex3f(-(width/2), -(height/2.0f),  (depth/2));
@@ -79,7 +79,7 @@ void Robot::createBox(float width, float height, float depth){
 
 
         // Top Face; offset.
-        glNormal3f(0.0f,(depth/2), 0.0f);
+        glNormal3f(0.0f, 1.0f, 0.0f);
 
       glVertex3f((width/2), (height/2.0f), -(depth/2));
       glVertex3f((width/2),  (height/2.0f),  (depth/2));
@@ -87,7 +87,7 @@ void Robot::createBox(float width, float height, float depth){
       glVertex3f(-(width/2),  (height/2.0f), -(depth/2));
 
         // Bottom Face; offset.
-        glNormal3f(0.0f, -(depth/2), 0.0f);
+        glNormal3f(0.0f, -1.0f, 0.0f);
 
       glVertex3f((width/2), -(height/2.0f), -(depth/2));
       glVertex3f((width/2),  -(height/2.0f),  (depth/2));
@@ -99,7 +99,7 @@ void Robot::createBox(float width, float height, float depth){
   }
 
 void Robot::draw(float x, float y, float z){
-   GLUquadricObj *neck = gluNewQuadric();
+    GLUquadricObj *neck = gluNewQuadric();
     GLUquadricObj *antenna = gluNewQuadric();
 
 
@@ -146,7 +146,7 @@ void Robot::draw(float x, float y, float z){
 
     glTranslatef(0, y-1.0f, 0);
     //glRotatef(180.0f, 0.0f, 1.0f, 0.0f);// Back Body
-    glColor3f( 0.4f, 0.4f, 0.4f );
+    glColor3f( 0.6f, 0.6f, 0.6f );
     /*  glTranslatef(0.0f, -0.15f, 0.0f); // to neck from antena center*/
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     gluCylinder(neck,0.3f,0.3f,0.3f,15,15);
@@ -168,7 +168,6 @@ void Robot::draw(float x, float y, float z){
 }
 
 void Robot::move(){
-    //if((point[0] > -5 && point[0] < 1000) && (point[2] > -5 && point[2] < 1000)){
     if(facing == 0.0f && point[2] < 999){
       point[2] += 1;
     } else if(facing == 1.0f && point[0] < 4){

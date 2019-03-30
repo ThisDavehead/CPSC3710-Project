@@ -1,4 +1,5 @@
 #include "Block.h"
+#include "Building.h"
 #include <cmath>
 
 void Block::createBox(float width, float height, float depth){
@@ -56,7 +57,19 @@ void Block::createBox(float width, float height, float depth){
       // All polygons have been drawn.
   glEnd();
 }
-
 void Block::draw(){
   createBox(40,1,40);
+}
+Block::Block(){
+  time_t t;
+  srand((unsigned) time(&t));
+  float locations[4] = {-1.0f, -1.0f, -1.0f, -1.0f};
+  locations[0] = (rand() % 4);
+  buildings.push_back(new Building(5.0f, 5 * locations[0])); // x, z, y base
+  locations[1] = (rand() % 4) + 4;
+  buildings.push_back(new Building(15.0f, 5 * locations[1]));
+  locations[2] = (rand() % 4) + 8;
+  buildings.push_back(new Building(25.0f, 5 * locations[2]));
+  locations[3] = (rand() % 4) + 12;
+  buildings.push_back(new Building(35.0f, 5 * locations[3]));
 }
