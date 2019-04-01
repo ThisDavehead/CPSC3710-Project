@@ -26,6 +26,10 @@
   Street Boot::network = Street();
   Block* Boot::blocks = new Block[4000];
 
+  // Global variable for whether our game is paused or not
+int Boot::paused = -1;
+#define PAUSE_MESSAGE "PAUSED"
+
   /////////////////////////////////////////////////////////
   // Routine which actually does the drawing             //
   /////////////////////////////////////////////////////////
@@ -102,16 +106,66 @@
      glTranslatef(0.0f, -2.15f, 0.0f);
      network.draw();
      glPopMatrix();
-     glutSwapBuffers();
 
+     // Display pause screen if we're paused.
+     if (paused == 1)
+	pauseGame();
+     
+     glutSwapBuffers();
+     
      glLoadIdentity();
      for (int i = 0; i < 10; i++) {
-         glTranslatef(0, -2.15f, 0);
-         glColor3f( 0.8f, 0.45f, 0.45f );
-         blocks[i].draw();
+	glTranslatef(0, -2.15f, 0);
+	glColor3f( 0.8f, 0.45f, 0.45f );
+	blocks[i].draw();
      }
      // Now let's do the motion calculations.
+     
   }
+
+  ////////////////////////////////////////////////////////////
+  // Callback function called when game is paused.          //
+  ////////////////////////////////////////////////////////////
+  /**
+  * Callback function called when game is paused.
+  * Displays pause message
+  * @return void
+  */
+void Boot::pauseGame(){
+   glMatrixMode(GL_PROJECTION);
+   glPushMatrix();
+   glDisable(GL_DEPTH_TEST);
+   glLoadIdentity();
+   glOrtho(0,Window_Width,0,Window_Height,-1.0,1.0);
+   // Draw textbox for pause message
+   glBegin(GL_QUADS);
+   glColor4f(1.0,1.0,1.0,1.0); 
+   glVertex2f(Window_Width*0.2, Window_Height/2-24);
+   glVertex2f(Window_Width - Window_Width*0.2, Window_Height/2-24);
+   glVertex2f(Window_Width - Window_Width*0.2, Window_Height/2+24);
+   glVertex2f(Window_Width*0.2, Window_Height/2+24);
+   glEnd();
+   // Print Pause message
+   glColor4f(0.1, 0.1, 0.1, 1.0);
+   char buf[16];
+   char* str;
+   str = buf;
+   int i,len=strlen(str);
+   sprintf(buf, PAUSE_MESSAGE);
+   glRasterPos2f(Window_Width/2.0 - Window_Width*0.05, Window_Height/2.0 - Window_Height*0.015);
+   for (i = 0; i < len; ++i)
+      glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *str++);
+   // To ease, simply translate up.
+   glTranslatef(6.0f, Window_Height - 14, 0.0f);
+   glEnable(GL_DEPTH_TEST);
+   glPopMatrix();
+   glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+   
+   // We start with GL_DECAL mode.
+   glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
+}
+
+
 
   ////////////////////////////////////////////////////////////
   // Callback function called when a normal key is pressed. //
@@ -126,25 +180,31 @@
   void Boot::myCBKey(unsigned char key, int x, int y)
   {
      switch (key) {
+	case 112: // p pauses or unpauses the game
+	   paused *= -1;
+	   break;
         case 113: // q turn left on intersect
-        if(network.checkIfIntersection(robot.point[0],robot.point[2])){
-          robot.left();
-          rotateCameras();
-        }
-  	 break;
-     case 114:  // r reset
-         robot.point[0] = 0;
-         robot.point[2] = 0;
-     break;
+	   if(paused == -1 && network.checkIfIntersection(robot.point[0],robot.point[2])){
+	      robot.left();
+	      rotateCameras();
+	   }
+	   break;
+	case 114:  // r reset
+	   if (paused == -1){
+	      robot.point[0] = 0;
+	      robot.point[2] = 0;
+	   }
+	   break;
         case 97:  // a turn right on intersect
-          if(network.checkIfIntersection(robot.point[0],robot.point[2])){
+          if(paused == -1 && network.checkIfIntersection(robot.point[0],robot.point[2])){
             robot.right();
             rotateCameras();
           }
   	 break;
         case 122: // z push forward
-          robot.move();
-     break;
+	   if (paused == -1)
+	      robot.move();
+	   break;
          case 101:  // e
          glEnable(GL_DEPTH_TEST);
          glClearDepth(1.0);
@@ -167,97 +227,101 @@
   * @return void
   */
   void Boot::rotateCameras(){
-    float neweyePoint[3] = {0, 0, 0};
-    switch(viewKey){
-     case GLUT_KEY_F1:
-        //forward head facing and default lookat
-        robot.head = 0;
-        neweyePoint[0] = 0;
-        neweyePoint[1] = 3;
-        neweyePoint[2] = -4;
-        break;
-     case GLUT_KEY_F2:
-        //right head facing
-        robot.head = 2;
-        break;
-     case GLUT_KEY_F3:
-        //left head facing
-        robot.head = 1;
-        break;
-     case GLUT_KEY_F4:
-        //default lookat
-         neweyePoint[0] = 0;
-         neweyePoint[1] = 3;
-         neweyePoint[2] = -4;
-        break;
-     case GLUT_KEY_F5:
-        //behind on left of robot
-         neweyePoint[0] = 4;
-         neweyePoint[1] = 4;
-         neweyePoint[2] = -4;
-        break;
-     case GLUT_KEY_F6:
-        //behind on right of robot
-         neweyePoint[0] = -4;
-         neweyePoint[1] = 4;
-         neweyePoint[2] = -4;
-        break;
-     case GLUT_KEY_F7:
-        //front on righ of robot
-         neweyePoint[0] = -4;
-         neweyePoint[1] = 4;
-         neweyePoint[2] = 4;
-        break;
-     case GLUT_KEY_F8:
-        //front on left of robot
-         neweyePoint[0] = 4;
-         neweyePoint[1] = 4;
-         neweyePoint[2] = 4;
-        break;
-     case GLUT_KEY_F9:
-        //behind on left of robot
-         neweyePoint[0] = 8;
-         neweyePoint[1] = 8;
-         neweyePoint[2] = -8;
-        break;
-     case GLUT_KEY_F10:
-        //behind on right of robot
-         neweyePoint[0] = -8;
-         neweyePoint[1] = 8;
-         neweyePoint[2] = -8;
-        break;
-     case GLUT_KEY_F11:
-        //front on right of robot
-         neweyePoint[0] = -8;
-         neweyePoint[1] = 8;
-        neweyePoint[2] = 8;
-        break;
-     case GLUT_KEY_F12:
-        //behind on left of robot
-        neweyePoint[0] = 8;
-        neweyePoint[1] = 8;
-        neweyePoint[2] = 8;
-        break;
-     default:
-        break;
-       }
-    if(robot.facing == -1.0f){ //right
-      Boot::eyePoint[0] = -neweyePoint[2];
- 	    Boot::eyePoint[2] = neweyePoint[0];
-    }else if(robot.facing == 1.0f){ //left
-      Boot::eyePoint[0] = neweyePoint[2];
-      Boot::eyePoint[2] = neweyePoint[0];
-    }else if(robot.facing == 0.0f){ //front
-      Boot::eyePoint[0] = neweyePoint[0];
-      Boot::eyePoint[2] = neweyePoint[2];
-    }if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
-      Boot::eyePoint[0] = neweyePoint[0];
-      Boot::eyePoint[2] = -neweyePoint[2];
-    }
+     if (paused == -1){ 
+	float neweyePoint[3] = {0, 0, 0};
+	switch(viewKey){
+	   case GLUT_KEY_F1:
+	      //forward head facing and default lookat
+	      robot.head = 0;
+	      neweyePoint[0] = 0;
+	      neweyePoint[1] = 3;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F2:
+	      //right head facing
+	      robot.head = 2;
+	      break;
+	   case GLUT_KEY_F3:
+	      //left head facing
+	      robot.head = 1;
+	      break;
+	   case GLUT_KEY_F4:
+	      //default lookat
+	      neweyePoint[0] = 0;
+	      neweyePoint[1] = 3;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F5:
+	      //behind on left of robot
+	      neweyePoint[0] = 4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F6:
+	      //behind on right of robot
+	      neweyePoint[0] = -4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F7:
+	      //front on righ of robot
+	      neweyePoint[0] = -4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = 4;
+	      break;
+	   case GLUT_KEY_F8:
+	      //front on left of robot
+	      neweyePoint[0] = 4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = 4;
+	      break;
+	   case GLUT_KEY_F9:
+	      //behind on left of robot
+	      neweyePoint[0] = 8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = -8;
+	      break;
+	   case GLUT_KEY_F10:
+	      //behind on right of robot
+	      neweyePoint[0] = -8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = -8;
+	      break;
+	   case GLUT_KEY_F11:
+	      //front on right of robot
+	      neweyePoint[0] = -8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = 8;
+	      break;
+	   case GLUT_KEY_F12:
+	      //behind on left of robot
+	      neweyePoint[0] = 8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = 8;
+	      break;
+	   default:
+	      break;
+	}
+	if(robot.facing == -1.0f){ //right
+	   Boot::eyePoint[0] = -neweyePoint[2];
+	   Boot::eyePoint[2] = neweyePoint[0];
+	}else if(robot.facing == 1.0f){ //left
+	   Boot::eyePoint[0] = neweyePoint[2];
+	   Boot::eyePoint[2] = neweyePoint[0];
+	}else if(robot.facing == 0.0f){ //front
+	   Boot::eyePoint[0] = neweyePoint[0];
+	   Boot::eyePoint[2] = neweyePoint[2];
+	}if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
+	   Boot::eyePoint[0] = neweyePoint[0];
+	   Boot::eyePoint[2] = -neweyePoint[2];
+	}
+     }
   }
-  void Boot::mySpecialKey(int key, int x, int y){
+void Boot::mySpecialKey(int key, int x, int y){
+   if (paused == -1){
      viewKey = key;
      Boot::rotateCameras();
+   }
   }
   ///////////////////////////////////////////////////////////////
   // Callback routine executed whenever the window is resized. //
