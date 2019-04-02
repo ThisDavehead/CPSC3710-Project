@@ -1,5 +1,10 @@
 #include "Block.h"
+#include "Building.h"
 #include <cmath>
+#include <iostream>
+#include <vector>
+
+//Building* Block::buildings = new Building[4];
 
 void Block::createBox(float width, float height, float depth){
    glBegin(GL_QUADS);
@@ -56,7 +61,41 @@ void Block::createBox(float width, float height, float depth){
       // All polygons have been drawn.
   glEnd();
 }
-
 void Block::draw(){
   createBox(40,1,40);
+  glTranslatef(buildings[0].xBase,0.0f,buildings[0].zBase);
+  buildings[0].draw();
+  glTranslatef(-buildings[0].xBase,0.0f,-buildings[0].zBase);
+  glTranslatef(buildings[1].xBase,0.0f,buildings[1].zBase);
+  buildings[1].draw();
+  glTranslatef(-buildings[1].xBase,0.0f,-buildings[1].zBase);
+  glTranslatef(buildings[2].xBase,0.0f,buildings[2].zBase);
+  buildings[2].draw();
+  glTranslatef(-buildings[2].xBase,0.0f,-buildings[2].zBase);
+  glTranslatef(buildings[3].xBase,0.0f,buildings[3].zBase);
+  buildings[3].draw();
+  glTranslatef(-buildings[3].xBase,0.0f,-buildings[3].zBase);
+
+}
+Block::Block(){
+  time_t t;
+  srand((unsigned) time(&t));
+  float locations[4] = {-1.0f, -1.0f, -1.0f, -1.0f};
+  locations[0] = (rand() % 4);
+  buildings[0] = Building(5.0f, 5 * locations[0]); // x, z, y base
+
+  locations[1] = (rand() % 4) + 4;
+  buildings[1] = Building(15.0f, 5 * locations[1]);
+  //buildings[1].xBase = 15.0f;
+//  buildings[1].zBase = 5 * locations[1];
+
+  locations[2] = (rand() % 4) + 8;
+  buildings[2] = Building(25.0f, 5 * locations[2]);
+  //buildings[2].xBase = 25.0f;
+  //buildings[2].zBase = 5 * locations[2];
+
+  locations[3] = (rand() % 4) + 12;
+  buildings[3] = Building(35.0f, 5 * locations[3]);
+  //buildings[3].xBase = 35.0f;
+  //buildings[3].zBase = 5 * locations[3];
 }
