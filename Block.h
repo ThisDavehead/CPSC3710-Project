@@ -15,7 +15,7 @@ class Block
   public:
     void draw();
     Block();
-    std::vector<Building*> buildings;
+    Building buildings[4];
     void createBox(float width, float height, float depth);
 };
 

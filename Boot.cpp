@@ -18,7 +18,7 @@
   int Boot::rightDown = 0;
   int Boot::leftDown = 0;
   int Boot::zcentre = 5;
-  float Boot::eyePoint[3] = {4, 4, 4};
+  float Boot::eyePoint[3] = {0, 2, 4};
   int Boot::viewKey = GLUT_KEY_F4;
 
   // Global variable for our robot;
@@ -59,47 +59,7 @@ int Boot::paused = -1;
      robot.draw(robot.point[0],robot.point[1],robot.point[2]);
      glPopMatrix();
 
-     /*glLoadIdentity();
-     glPushMatrix();
-     glColor3f( 0.2f, 0.3f, 0.2f);
-     //Building newBuild = Building(5,5);
-     glTranslatef(-10.0f, 10.0f, 10.0f);
-     //newBuild.draw();
-     glPopMatrix();
-
-     glLoadIdentity();
-     glPushMatrix();
-     glColor3f( 0.3f, 0.2f, 0.2f );
-     //Building newBuild1 = Building(5,15);
-     glTranslatef(-10.0f, 10.0f, -8.0f);
-     //newBuild1.draw();
-     glPopMatrix();
-
-     glLoadIdentity();
-     glPushMatrix();
-     glColor3f( 0.2f, 0.2f, 0.3f );
-     //Building newBuild3 = Building(15, 5);
-     glTranslatef(15.0f, 10.0f, -8.0f);
-     //newBuild3.draw();
-     glPopMatrix();
-
-     glLoadIdentity();
-     glPushMatrix();
-     glColor3f( 0.2f, 0.3f, 0.3f);
-     //Building newBuild4 = Building(20,20);
-     glTranslatef(15.0f, 10.0f, 8.0f);
-     //newBuild4.draw();
-     glPopMatrix();
-
-     glLoadIdentity();
-     glPushMatrix();
-     glColor3f( 0.2f, 0.2f, 0.2f );
-    // Block newBlock;
-     glTranslatef(0.0f, -3.15, 0.0f);
-     //newBlock.draw();
-     glPopMatrix();
-     //Robot */
-          //draw the street netwoek
+     //draw the street netwoek
      glLoadIdentity();
      glPushMatrix();
      glColor3f( 0.45f, 0.45f, 0.45f );
@@ -107,37 +67,27 @@ int Boot::paused = -1;
      network.draw();
      glPopMatrix();
 
-     glLoadIdentity();
-     glTranslatef(24.0f, -2.15f, 24.0f);
-     for (int i = 0; i < 10; i++) {
+    glLoadIdentity();
+    glTranslatef(-22.0f, -2.50f, 22.0f);
+    for (int i = 0; i < 20; i++) {
        if(i != 0){
-         glTranslatef(0.0f, 0.0f, 0.0f);
-       }else{
-         glTranslatef(0.0f, 0.0f, 48.0f*(i+1));
+         glLoadIdentity();
+         glTranslatef(-22.0f, -2.50f, 22.0f);
+         glTranslatef(0.0f, 0.0f, 44.0f*i);
        }
-       for (int j = 0; j < 10; j++) {
-         glPushMatrix();
+       for (int j = 0; j < 20; j++) {
          if(j != 0){
-           glTranslatef(24.0f, 0.0f, 0.0f);
-         }else{
-           glTranslatef(-48.0f*(j+1), 0.0f, 0.0f);
+           glTranslatef(-44.0f, 0.0f, 0.0f);
          }
-         glColor3f( 0.8f, 0.45f, 0.45f );
-         blocks[i].draw();
-         glPopMatrix();
+         glColor3f( 0.45f, 0.7f, 0.45f );
+         blocks[i*20+j].draw();
        }
+
      }
 
      // Display pause screen if we're paused.
      if (paused == 1)
 	         pauseGame();
-
-     /*glLoadIdentity();
-     for (int i = 0; i < 10; i++) {
-      	glTranslatef(0, -2.15f, 0);
-      	glColor3f( 0.8f, 0.45f, 0.45f );
-      	blocks[i].draw();
-     }*/
 
      glutSwapBuffers();
      // Now let's do the motion calculations.
@@ -433,6 +383,7 @@ void Boot::mySpecialKey(int key, int x, int y){
      glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
 
      // Depth to clear depth buffer to; type of test.
+     glEnable(GL_DEPTH_TEST);
      glEnable(GL_DEPTH_TEST);
      glClearDepth(1.0);
      glDepthFunc(GL_LESS);
