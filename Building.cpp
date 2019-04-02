@@ -218,6 +218,7 @@ void Building::draw(){
    }
    if (health != 0)
    {
+      glTranslatef(0.0f, height/2.0f, 0.0f);
       switch (shape)
       {
 	 case 0:
