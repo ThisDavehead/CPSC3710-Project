@@ -15,6 +15,7 @@ class Robot
    int point[3]; // center point
    float facing;
    float centreToFeet;
+   float antennaAngle;
    Robot();
    void createCircle(float radius, int x, int y);
    void createTriangle(float width, float height);

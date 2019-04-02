@@ -107,20 +107,41 @@ int Boot::paused = -1;
      network.draw();
      glPopMatrix();
 
+     glLoadIdentity();
+     glTranslatef(24.0f, -2.15f, 24.0f);
+     for (int i = 0; i < 10; i++) {
+       if(i != 0){
+         glTranslatef(0.0f, 0.0f, 0.0f);
+       }else{
+         glTranslatef(0.0f, 0.0f, 48.0f*(i+1));
+       }
+       for (int j = 0; j < 10; j++) {
+         glPushMatrix();
+         if(j != 0){
+           glTranslatef(24.0f, 0.0f, 0.0f);
+         }else{
+           glTranslatef(-48.0f*(j+1), 0.0f, 0.0f);
+         }
+         glColor3f( 0.8f, 0.45f, 0.45f );
+         blocks[i].draw();
+         glPopMatrix();
+       }
+     }
+
      // Display pause screen if we're paused.
      if (paused == 1)
-	pauseGame();
-     
-     glutSwapBuffers();
-     
-     glLoadIdentity();
+	         pauseGame();
+
+     /*glLoadIdentity();
      for (int i = 0; i < 10; i++) {
-	glTranslatef(0, -2.15f, 0);
-	glColor3f( 0.8f, 0.45f, 0.45f );
-	blocks[i].draw();
-     }
+      	glTranslatef(0, -2.15f, 0);
+      	glColor3f( 0.8f, 0.45f, 0.45f );
+      	blocks[i].draw();
+     }*/
+
+     glutSwapBuffers();
      // Now let's do the motion calculations.
-     
+
   }
 
   ////////////////////////////////////////////////////////////
@@ -139,7 +160,7 @@ void Boot::pauseGame(){
    glOrtho(0,Window_Width,0,Window_Height,-1.0,1.0);
    // Draw textbox for pause message
    glBegin(GL_QUADS);
-   glColor4f(1.0,1.0,1.0,1.0); 
+   glColor4f(1.0,1.0,1.0,1.0);
    glVertex2f(Window_Width*0.2, Window_Height/2-24);
    glVertex2f(Window_Width - Window_Width*0.2, Window_Height/2-24);
    glVertex2f(Window_Width - Window_Width*0.2, Window_Height/2+24);
@@ -160,7 +181,7 @@ void Boot::pauseGame(){
    glEnable(GL_DEPTH_TEST);
    glPopMatrix();
    glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
-   
+
    // We start with GL_DECAL mode.
    glTexEnvf(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_DECAL);
 }
@@ -227,7 +248,7 @@ void Boot::pauseGame(){
   * @return void
   */
   void Boot::rotateCameras(){
-     if (paused == -1){ 
+     if (paused == -1){
 	float neweyePoint[3] = {0, 0, 0};
 	switch(viewKey){
 	   case GLUT_KEY_F1:
@@ -423,10 +444,6 @@ void Boot::mySpecialKey(int key, int x, int y){
      rightDown = 0;
      leftDown = 0;
      zcentre = 5;
-     //set up blocks
-     //for (int i = 0; i < 4000; i++) {
-
-     //}
 
      // Load up the correct perspective matrix; using a callback directly.
      Boot::CallBackResizeScene(Width,Height);
