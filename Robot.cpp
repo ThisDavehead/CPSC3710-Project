@@ -6,6 +6,7 @@ Robot::Robot(){
    for (int i = 0; i < 3; ++i)
       point[i] = 0;
    centreToFeet = -3.15f;
+   antennaAngle = 0.0f;
 }
 
 void Robot::createCircle(float radius, int x, int y){
@@ -143,6 +144,12 @@ void Robot::draw(float x, float y, float z){
     glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
     gluCylinder(antenna,0.1f,0.1f,0.4f,15,15);
     glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    glTranslatef(0.0f, 0.1f, 0.0f);
+    glRotatef(antennaAngle, 0.0f, 1.0f, 0.0f);
+    glColor3f( 0.7f, 0.7f, 0.7f );
+    createBox(0.2f,0.2f,0.2f);
+    glRotatef(-antennaAngle, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0.0f, -0.1f, 0.0f);
 
     glTranslatef(0, y-1.0f, 0);
     //glRotatef(180.0f, 0.0f, 1.0f, 0.0f);// Back Body
@@ -176,6 +183,10 @@ void Robot::move(){
       point[0] -= 1;
     } else if((facing == 2.0f || facing == -2.0f) && point[2] > -4){
       point[2] -= 1;
+    }
+    antennaAngle += 10.0f;
+    if(antennaAngle > 360.0f){
+      antennaAngle = 0.0f;
     }
 }
 

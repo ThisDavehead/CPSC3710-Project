@@ -63,14 +63,11 @@ void Street::draw(){
  @author Jeff Deurloo
 */
 bool Street::checkIfIntersection(const float xpos, const float zpos){
-    printf ("Point %f %f.\n", xpos, zpos);
-    printf ("PointMod %f %f.\n", fmod(xpos,blockLength), fmod(zpos,blockLength));
+    //printf ("Point %f %f.\n", xpos, zpos);
+    //printf ("PointMod %f %f.\n", fmod(xpos,blockLength), fmod(zpos,blockLength));
     bool x = (abs(fmod(xpos,blockLength)) < width /2 || abs(fmod(xpos,blockLength)) > blockLength) || (fmod(xpos,blockLength) > -(width /2) && fmod(xpos,blockLength) < -(width /2));
     bool z = (abs(fmod(zpos,blockLength)) < width /2 || abs(fmod(zpos,blockLength)) > blockLength) || (fmod(zpos,blockLength) > -(width /2) && fmod(zpos,blockLength) < width /2);
-    if(x && z)
-        return true;
-    else
-        return false;
+    return x && z;
 }
 
 const float Street::getBlockLength(){
