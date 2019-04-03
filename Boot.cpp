@@ -286,6 +286,7 @@ void Boot::mySpecialKey(int key, int x, int y){
     switch(key){
     case GLUT_KEY_F1:
         robot.head = 0;
+        viewKey=key;
         break;
         case GLUT_KEY_F2:
 	      //right head facing
