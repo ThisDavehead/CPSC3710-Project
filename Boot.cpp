@@ -186,98 +186,120 @@ void Boot::pauseGame(){
   */
   void Boot::rotateCameras(){
      if (paused == -1){
+    bool change=true;
 	float neweyePoint[3] = {0, 0, 0};
 	switch(viewKey){
 	   case GLUT_KEY_F1:
 	      //forward head facing and default lookat
-	      robot.head = 0;
+	      //robot.head = 0;
 	      neweyePoint[0] = 0;
 	      neweyePoint[1] = 3;
 	      neweyePoint[2] = -4;
-	      break;
-	   case GLUT_KEY_F2:
-	      //right head facing
-	      robot.head = 2;
-	      break;
-	   case GLUT_KEY_F3:
-	      //left head facing
-	      robot.head = 1;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F4:
 	      //default lookat
 	      neweyePoint[0] = 0;
 	      neweyePoint[1] = 3;
 	      neweyePoint[2] = -4;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F5:
 	      //behind on left of robot
 	      neweyePoint[0] = 4;
 	      neweyePoint[1] = 4;
 	      neweyePoint[2] = -4;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F6:
 	      //behind on right of robot
 	      neweyePoint[0] = -4;
 	      neweyePoint[1] = 4;
 	      neweyePoint[2] = -4;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F7:
 	      //front on righ of robot
 	      neweyePoint[0] = -4;
 	      neweyePoint[1] = 4;
 	      neweyePoint[2] = 4;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F8:
 	      //front on left of robot
 	      neweyePoint[0] = 4;
 	      neweyePoint[1] = 4;
 	      neweyePoint[2] = 4;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F9:
 	      //behind on left of robot
 	      neweyePoint[0] = 8;
 	      neweyePoint[1] = 8;
 	      neweyePoint[2] = -8;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F10:
 	      //behind on right of robot
 	      neweyePoint[0] = -8;
 	      neweyePoint[1] = 8;
 	      neweyePoint[2] = -8;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F11:
 	      //front on right of robot
 	      neweyePoint[0] = -8;
 	      neweyePoint[1] = 8;
 	      neweyePoint[2] = 8;
+	      change=true;
 	      break;
 	   case GLUT_KEY_F12:
 	      //behind on left of robot
 	      neweyePoint[0] = 8;
 	      neweyePoint[1] = 8;
 	      neweyePoint[2] = 8;
+	      change=true;
 	      break;
 	   default:
+	       change=false;
 	      break;
 	}
-	if(robot.facing == -1.0f){ //right
-	   Boot::eyePoint[0] = -neweyePoint[2];
-	   Boot::eyePoint[2] = neweyePoint[0];
-	}else if(robot.facing == 1.0f){ //left
-	   Boot::eyePoint[0] = neweyePoint[2];
-	   Boot::eyePoint[2] = neweyePoint[0];
-	}else if(robot.facing == 0.0f){ //front
-	   Boot::eyePoint[0] = neweyePoint[0];
-	   Boot::eyePoint[2] = neweyePoint[2];
-	}if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
-	   Boot::eyePoint[0] = neweyePoint[0];
-	   Boot::eyePoint[2] = -neweyePoint[2];
+	if(change){
+        if(robot.facing == -1.0f){ //right
+           Boot::eyePoint[0] = -neweyePoint[2];
+           Boot::eyePoint[2] = neweyePoint[0];
+        }else if(robot.facing == 1.0f){ //left
+           Boot::eyePoint[0] = neweyePoint[2];
+           Boot::eyePoint[2] = neweyePoint[0];
+        }else if(robot.facing == 0.0f){ //front
+           Boot::eyePoint[0] = neweyePoint[0];
+           Boot::eyePoint[2] = neweyePoint[2];
+        }if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
+           Boot::eyePoint[0] = neweyePoint[0];
+           Boot::eyePoint[2] = -neweyePoint[2];
+        }
 	}
      }
   }
 void Boot::mySpecialKey(int key, int x, int y){
    if (paused == -1){
-     viewKey = key;
+    switch(key){
+    case GLUT_KEY_F1:
+        robot.head = 0;
+        break;
+        case GLUT_KEY_F2:
+	      //right head facing
+	      robot.head = 2;
+	      break;
+	   case GLUT_KEY_F3:
+	      //left head facing
+	      robot.head = 1;
+    break;
+       default:
+          viewKey = key;
+          break;
+   };
+     if(viewKey!=GLUT_KEY_F2&&viewKey!=GLUT_KEY_F3)
      Boot::rotateCameras();
    }
   }
