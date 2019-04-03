@@ -13,10 +13,10 @@
 class Block
 {
   public:
-    void draw();
+    void draw(GLenum mode);
     Block();
     Block(int x);
-    //void init();
+    int ID;
     Building buildings[4];
     void createBox(float width, float height, float depth);
 };

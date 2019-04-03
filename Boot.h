@@ -39,6 +39,8 @@ class Boot
     static void mouseFunctionality(int buttonNum, int btnState, int x, int y);
     static void MyInit(int Width, int Height);
     static void specKeyUp(int key, int x, int y);
+    static void processHits (GLint hits, GLuint buffer[]);
+
 };
 
 #endif /*BOOT_H_*/

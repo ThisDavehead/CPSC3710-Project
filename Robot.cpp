@@ -22,7 +22,6 @@ void Robot::createCircle(float radius, int x, int y){
         glVertex3f(x2,y2, 0.0f);
     }
     glEnd();
-    //thanks to https://www.codeproject.com/Questions/64657/how-to-draw-a-filled-circle-in-opengl
   }
   /**
   */
@@ -140,16 +139,22 @@ void Robot::draw(float x, float y, float z){
     glTranslatef(-0.2f, 0.0f, -0.42f);
 
     glTranslatef(0.0f, 0.6f, 0.0f); // to antena center
+    glPushMatrix();
     glColor3f( 0.4f, 0.4f, 0.4f );
-    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-    gluCylinder(antenna,0.1f,0.1f,0.4f,15,15);
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
-    glTranslatef(0.0f, 0.1f, 0.0f);
+    glRotatef(antennaAngle, 0.0f, 1.0f, 0.0f);
+      glTranslatef(0.2f, 0.0f, 0.0f);
+      glRotatef(90.0f, 1.0, 0.0f, 0.0f);
+      gluCylinder(antenna,0.1f,0.1f,0.4f,15,15);
+      glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+    glRotatef(-antennaAngle, 0.0f, 1.0f, 0.0f);
+    glPopMatrix();
+
+    /*glTranslatef(0.0f, 0.1f, 0.0f);
     glRotatef(antennaAngle, 0.0f, 1.0f, 0.0f);
     glColor3f( 0.7f, 0.7f, 0.7f );
     createBox(0.2f,0.2f,0.2f);
     glRotatef(-antennaAngle, 0.0f, 1.0f, 0.0f);
-    glTranslatef(0.0f, -0.1f, 0.0f);
+    glTranslatef(0.0f, -0.1f, 0.0f);*/
 
     glTranslatef(0, y-1.0f, 0);
     //glRotatef(180.0f, 0.0f, 1.0f, 0.0f);// Back Body
@@ -181,11 +186,11 @@ void Robot::move(){
       point[0] += 1;
     } else if(facing == -1.0f && point[0] > -880){ // right
       point[0] -= 1;
-    } else if((facing == 2.0f || facing == -2.0f) && point[2] > 1){// Back
+    } else if((facing == 2.0f || facing == -2.0f) && point[2] > 0){// Back
       point[2] -= 1;
     }
-    antennaAngle += 10.0f;
-    if(antennaAngle > 360.0f){
+    antennaAngle -= 10.0f;
+    if(antennaAngle < -360.0f){
       antennaAngle = 0.0f;
     }
 }

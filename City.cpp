@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-void City::draw(){
+void City::draw(GLenum mode){
   glPushMatrix();
   glTranslatef(-22.0f, -2.50f, 22.0f);
   for (int i = 0; i < 20; i++) {
@@ -17,7 +17,7 @@ void City::draw(){
          glTranslatef(-44.0f, 0.0f, 0.0f);
        }
        glColor3f( 0.45f, 0.7f, 0.45f );
-       blocks[i*20+j].draw();
+       blocks[i*20+j].draw(mode);
      }
    }
    glPopMatrix();

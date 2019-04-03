@@ -13,7 +13,7 @@
 class City
 {
   public:
-    void draw();
+    void draw(GLenum mode);
     City();
     Block blocks[4000];
 };

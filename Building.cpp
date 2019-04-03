@@ -219,15 +219,19 @@ void Building::draw(){
       switch (shape)
       {
 	 case 0:
+      
 	    createBox(width,height,depth);
 	    break;
 	 case 1:
+
 	    createSilo(width/2,height/2,0.0,0);
 	    break;
 	 case 2:
+
 	    createPyramid(width,height,depth);
 	    break;
 	 default:
+
 	    glColor3f(1.0f,0.0f,1.0f);
 	    createBox(width,height,depth);
 	    break;

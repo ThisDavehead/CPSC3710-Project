@@ -59,22 +59,30 @@ void Block::createBox(float width, float height, float depth){
       // All polygons have been drawn.
   glEnd();
 }
-void Block::draw(){
+void Block::draw(GLenum mode){
   createBox(40,1,40);
   glTranslatef(-20.0f, 0.0f, -20.0f);
   glTranslatef(buildings[0].xBase,0.0f,buildings[0].zBase);
+  if(mode == GL_SELECT)
+		glLoadName(ID*4+1);
   buildings[0].draw();
   glTranslatef(-buildings[0].xBase,0.0f,-buildings[0].zBase);
 
   glTranslatef(buildings[1].xBase,0.0f,buildings[1].zBase);
+  if(mode == GL_SELECT)
+		glLoadName(ID*4+2);
   buildings[1].draw();
   glTranslatef(-buildings[1].xBase,0.0f,-buildings[1].zBase);
 
   glTranslatef(buildings[2].xBase,0.0f,buildings[2].zBase);
+  if(mode == GL_SELECT)
+		glLoadName(ID*4+3);
   buildings[2].draw();
   glTranslatef(-buildings[2].xBase,0.0f,-buildings[2].zBase);
 
   glTranslatef(buildings[3].xBase,0.0f,buildings[3].zBase);
+  if(mode == GL_SELECT)
+		glLoadName(ID*4+4);
   buildings[3].draw();
   glTranslatef(-buildings[3].xBase,0.0f,-buildings[3].zBase);
   glTranslatef(20.0f, 0.0f, 20.0f);
@@ -84,17 +92,12 @@ Block::Block(){
 
 }
 Block::Block(int x){
-  if(x == 2){
-    buildings[0] = Building(10.0f,10.0f); // x, z, y base
-    buildings[2] = Building(10.0f, 30.0f);
-    buildings[1] = Building(30.0f, 10.0f);
-    buildings[3] = Building(30.0f, 5.0f);
-  }else{
+    ID = x;
     buildings[0] = Building(10.0f, 10.0f); // x, z, y base
     buildings[2] = Building(10.0f, 30.0f);
     buildings[1] = Building(30.0f, 10.0f);
     buildings[3] = Building(30.0f, 30.0f);
-  }
+
 }
 /*void Block::init(){
   buildings[0] = Building(10.0f,10.0f); // x, z, y base

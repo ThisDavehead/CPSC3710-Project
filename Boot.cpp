@@ -18,7 +18,7 @@
   int Boot::rightDown = 0;
   int Boot::leftDown = 0;
   int Boot::zcentre = 5;
-  float Boot::eyePoint[3] = {0, 3, 4};
+  float Boot::eyePoint[3] = {0, 3, -4};
   int Boot::viewKey = GLUT_KEY_F4;
 
   // Global variable for our robot;
@@ -48,7 +48,6 @@ int Boot::paused = -1;
      glLoadIdentity();
 
      glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 60.0);
-     rotateCameras();
      gluLookAt(robot.point[0] + Boot::eyePoint[0], robot.point[1] + Boot::eyePoint[1] , robot.point[2] + Boot::eyePoint[2], robot.point[0], robot.point[1]+1, robot.point[2], 0,1,0);
 
 
@@ -69,13 +68,14 @@ int Boot::paused = -1;
      glPopMatrix();
 
      glLoadIdentity();
-     city.draw();
+     city.draw(GL_RENDER);
 
      // Display pause screen if we're paused.
      if (paused == 1)
 	         pauseGame();
 
      glutSwapBuffers();
+     glFlush();
      // Now let's do the motion calculations.
 
   }
@@ -137,171 +137,164 @@ void Boot::pauseGame(){
   void Boot::myCBKey(unsigned char key, int x, int y)
   {
      switch (key) {
-	case 112: // p pauses or unpauses the game
-	   paused *= -1;
-	   break;
-        case 113: // q turn left on intersect
-	   if(paused == -1 && network.checkIfIntersection(robot.point[0],robot.point[2])){
-	      robot.left();
-	      rotateCameras();
-	   }
-	   break;
-	case 114:  // r reset
-	   if (paused == -1){
-	      robot.point[0] = 0;
-	      robot.point[2] = 0;
-	   }
-	   break;
-        case 97:  // a turn right on intersect
-          if(paused == -1 && network.checkIfIntersection(robot.point[0],robot.point[2])){
-            robot.right();
-            rotateCameras();
+    	case 112: // p pauses or unpauses the game
+    	   paused *= -1;
+    	   break;
+            case 113: // q turn left on intersect
+    	   if(paused == -1 && network.checkIfIntersection(robot.point[0],robot.point[2])){
+    	      robot.left();
+    	      rotateCameras();
+    	   }
+    	   break;
+    	case 114:  // r reset
+    	   if (paused == -1){
+    	      robot.point[0] = 0;
+    	      robot.point[2] = 0;
+    	   }
+    	   break;
+            case 97:  // a turn right on intersect
+              if(paused == -1 && network.checkIfIntersection(robot.point[0],robot.point[2])){
+                robot.right();
+                rotateCameras();
+              }
+      	 break;
+            case 122: // z push forward
+    	   if (paused == -1)
+    	      robot.move();
+            printf ("x: %d z: %d\n", robot.point[0], robot.point[2]);
+    	   break;
+             case 101:  // e
+             glEnable(GL_DEPTH_TEST);
+             glClearDepth(1.0);
+             glDepthFunc(GL_LESS);
+         break;
+             case 100: break; // d
+             glDisable(GL_DEPTH_TEST);
+             glClearDepth(1.0);
+             glDepthFunc(GL_LESS);
+         default:
+            printf ("KP: break; No action for %d.\n", key);
+            break;
           }
-  	 break;
-        case 122: // z push forward
-	   if (paused == -1)
-	      robot.move();
-        printf ("x: %d z: %d\n", robot.point[0], robot.point[2]);
-	   break;
-         case 101:  // e
-         glEnable(GL_DEPTH_TEST);
-         glClearDepth(1.0);
-         glDepthFunc(GL_LESS);
-     break;
-         case 100: break; // d
-         glDisable(GL_DEPTH_TEST);
-         glClearDepth(1.0);
-         glDepthFunc(GL_LESS);
-     default:
-        printf ("KP: break; No action for %d.\n", key);
-        break;
       }
-  }
-  /**
-  * Callback function called when a special key is pressed.
-  * @param key Key that was pressed and released
-  * @param x
-  * @param y
-  * @return void
-  */
+      /**
+      * Callback function called when a special key is pressed.
+      * @param key Key that was pressed and released
+      * @param x
+      * @param y
+      * @return void
+      */
   void Boot::rotateCameras(){
-     if (paused == -1){
-    bool change=true;
-	float neweyePoint[3] = {0, 0, 0};
-	switch(viewKey){
-	   case GLUT_KEY_F1:
-	      //forward head facing and default lookat
-	      //robot.head = 0;
-	      neweyePoint[0] = 0;
-	      neweyePoint[1] = 3;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F4:
-	      //default lookat
-	      neweyePoint[0] = 0;
-	      neweyePoint[1] = 3;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F5:
-	      //behind on left of robot
-	      neweyePoint[0] = 4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F6:
-	      //behind on right of robot
-	      neweyePoint[0] = -4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F7:
-	      //front on righ of robot
-	      neweyePoint[0] = -4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = 4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F8:
-	      //front on left of robot
-	      neweyePoint[0] = 4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = 4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F9:
-	      //behind on left of robot
-	      neweyePoint[0] = 8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = -8;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F10:
-	      //behind on right of robot
-	      neweyePoint[0] = -8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = -8;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F11:
-	      //front on right of robot
-	      neweyePoint[0] = -8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = 8;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F12:
-	      //behind on left of robot
-	      neweyePoint[0] = 8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = 8;
-	      change=true;
-	      break;
-	   default:
-	       change=false;
-	      break;
-	}
-	if(change){
+    if (paused == -1){
+    	float neweyePoint[3] = {0, 0, 0};
+      bool invalid = false;
+    	switch(viewKey){
+    	   case GLUT_KEY_F1:
+    	      //forward head facing and default lookat
+    	      robot.head = 0;
+    	      neweyePoint[0] = 0;
+    	      neweyePoint[1] = 3;
+    	      neweyePoint[2] = -4;
+    	      break;
+    	   case GLUT_KEY_F4:
+    	      //default lookat
+    	      neweyePoint[0] = 0;
+    	      neweyePoint[1] = 3;
+    	      neweyePoint[2] = -4;
+    	      break;
+    	   case GLUT_KEY_F5:
+    	      //behind on left of robot
+    	      neweyePoint[0] = 4;
+    	      neweyePoint[1] = 4;
+    	      neweyePoint[2] = -4;
+    	      break;
+    	   case GLUT_KEY_F6:
+    	      //behind on right of robot
+    	      neweyePoint[0] = -4;
+    	      neweyePoint[1] = 4;
+    	      neweyePoint[2] = -4;
+    	      break;
+    	   case GLUT_KEY_F7:
+    	      //front on right of robot
+    	      neweyePoint[0] = -4;
+    	      neweyePoint[1] = 4;
+    	      neweyePoint[2] = 4;
+    	      break;
+    	   case GLUT_KEY_F8:
+    	      //front on left of robot
+    	      neweyePoint[0] = 4;
+    	      neweyePoint[1] = 4;
+    	      neweyePoint[2] = 4;
+    	      break;
+    	   case GLUT_KEY_F9:
+    	      //behind on left of robot
+    	      neweyePoint[0] = 8;
+    	      neweyePoint[1] = 8;
+    	      neweyePoint[2] = -8;
+    	      break;
+    	   case GLUT_KEY_F10:
+    	      //behind on right of robot
+    	      neweyePoint[0] = -8;
+    	      neweyePoint[1] = 8;
+    	      neweyePoint[2] = -8;
+    	      break;
+    	   case GLUT_KEY_F11:
+    	      //front on right of robot
+    	      neweyePoint[0] = -8;
+    	      neweyePoint[1] = 8;
+    	      neweyePoint[2] = 8;
+    	      break;
+    	   case GLUT_KEY_F12:
+    	      //behind on left of robot
+    	      neweyePoint[0] = 8;
+    	      neweyePoint[1] = 8;
+    	      neweyePoint[2] = 8;
+    	      break;
+    	   default:
+            invalid = true;
+            printf ("KP: break; No action for %d.\n", viewKey);
+    	      break;
+    	}
+      if(!invalid){
         if(robot.facing == -1.0f){ //right
-           Boot::eyePoint[0] = -neweyePoint[2];
-           Boot::eyePoint[2] = neweyePoint[0];
-        }else if(robot.facing == 1.0f){ //left
-           Boot::eyePoint[0] = neweyePoint[2];
-           Boot::eyePoint[2] = neweyePoint[0];
-        }else if(robot.facing == 0.0f){ //front
-           Boot::eyePoint[0] = neweyePoint[0];
-           Boot::eyePoint[2] = neweyePoint[2];
-        }if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
-           Boot::eyePoint[0] = neweyePoint[0];
-           Boot::eyePoint[2] = -neweyePoint[2];
-        }
-	}
-     }
-  }
+      	   Boot::eyePoint[0] = -neweyePoint[2];
+      	   Boot::eyePoint[2] = neweyePoint[0];
+      	}else if(robot.facing == 1.0f){ //left
+      	   Boot::eyePoint[0] = neweyePoint[2];
+      	   Boot::eyePoint[2] = -neweyePoint[0];
+      	}else if(robot.facing == 0.0f){ //front
+      	   Boot::eyePoint[0] = neweyePoint[0];
+      	   Boot::eyePoint[2] = neweyePoint[2];
+      	}else if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
+      	   Boot::eyePoint[0] = neweyePoint[0];
+      	   Boot::eyePoint[2] = -neweyePoint[2];
+           Boot::eyePoint[0] = -eyePoint[0];
+      	   Boot::eyePoint[2] = eyePoint[2];
+      	}
+      }
+    }
+}
 void Boot::mySpecialKey(int key, int x, int y){
    if (paused == -1){
-    switch(key){
-    case GLUT_KEY_F1:
-        robot.head = 0;
-        viewKey=key;
-        break;
-        case GLUT_KEY_F2:
-	      //right head facing
-	      robot.head = 2;
-	      break;
-	   case GLUT_KEY_F3:
-	      //left head facing
-	      robot.head = 1;
-    break;
-       default:
-          viewKey = key;
-          break;
-   };
-     if(viewKey!=GLUT_KEY_F2&&viewKey!=GLUT_KEY_F3)
-     Boot::rotateCameras();
+     if(key == GLUT_KEY_F2 || key == GLUT_KEY_F3){
+       switch(key){
+         case GLUT_KEY_F2:
+           //right head facing
+           robot.head = 2;
+           break;
+        case GLUT_KEY_F3:
+           //left head facing
+           robot.head = 1;
+           break;
+       }
+     }else{
+       if(key ==  GLUT_KEY_F1 || key ==  GLUT_KEY_F4 || key ==  GLUT_KEY_F5 ||
+         key ==  GLUT_KEY_F6 || key ==  GLUT_KEY_F7  || key ==  GLUT_KEY_F8 ||
+         key ==  GLUT_KEY_F9 || key ==  GLUT_KEY_F10 || key ==  GLUT_KEY_F11 ||
+         key ==  GLUT_KEY_F12
+       ){viewKey = key;}
+       Boot::rotateCameras();
+     }
    }
   }
   ///////////////////////////////////////////////////////////////
@@ -322,12 +315,32 @@ void Boot::mySpecialKey(int key, int x, int y){
      glMatrixMode(GL_PROJECTION);
      glLoadIdentity();
      gluPerspective(45.0f,((GLfloat)Width)/((GLfloat)Height),0.1f,10000.0f);
+     //gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
      //set matix mode to modelview
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
      Window_Width  = Width;
      Window_Height = Height;
   }
+  void Boot::processHits (GLint hits, GLuint buffer[])
+{
+   unsigned int i, j;
+   GLint names, *ptr;
+
+   printf ("hits = %d\n", hits);
+   ptr = (GLint *) buffer;
+   for (i = 0; i < hits; i++) {	/*  for each hit  */
+      names = *ptr;
+	   ptr+=3;
+      for (j = 0; j < names; j++) { /*  for each name */
+         city.blocks[*ptr/4].buildings[*ptr%4].attack();
+         printf ("Building %d was attacked", *ptr);
+         ptr++;
+      }
+      printf ("\n");
+   }
+}
+  #define SIZE 16000
   /**
   * Callback routine for when a mouse button is pressed or released.
   * @param buttonNum
@@ -336,35 +349,41 @@ void Boot::mySpecialKey(int key, int x, int y){
   * @param y
   * @return void
   */
-  void Boot::mouseFunctionality(int buttonNum, int btnState, int x, int y) {
-    //rightDown
-    if(buttonNum == GLUT_RIGHT_BUTTON) {
-      if(rightDown == 0 && btnState == GLUT_DOWN) {
-        rightDown = 1;
-        leftDown = 0;
-      }
-    }
-    //leftDown
-    if(buttonNum == GLUT_LEFT_BUTTON) {
-      if(leftDown == 0 && btnState == GLUT_DOWN) {
-        leftDown = 1;
-        rightDown = 0;
-      }
-    }
-    //rightUp
-    if(buttonNum == GLUT_RIGHT_BUTTON) {
-      if(rightDown == 1 && btnState == GLUT_UP) {
-        rightDown = 0;
-        leftDown = 0;
-      }
-    }
-    //rightUp
-    if(buttonNum == GLUT_LEFT_BUTTON) {
-      if(leftDown == 1 && btnState == GLUT_UP) {
-        rightDown = 0;
-        leftDown = 0;
-      }
-    }
+  void Boot::mouseFunctionality(int button, int state, int x, int y) {
+   GLuint selectBuf[SIZE];
+   GLint hits;
+   GLint viewport[4];
+
+   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+   {
+   	glGetIntegerv (GL_VIEWPORT, viewport);
+
+   	glSelectBuffer (SIZE, selectBuf);
+   	glRenderMode(GL_SELECT);
+
+   	glInitNames();
+   	glPushName(0);
+
+   	glMatrixMode (GL_PROJECTION);
+   	glPushMatrix ();
+   	glLoadIdentity ();
+		/*  create 5x5 pixel picking region near cursor location	*/
+   	gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y),
+                  	5.0, 5.0, viewport);
+   	gluPerspective(45.0f,((GLfloat)Window_Width)/((GLfloat)Window_Height),0.1f,10000.0f);
+    //gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
+   	city.draw(GL_SELECT);
+
+
+   	glMatrixMode (GL_PROJECTION);
+   	glPopMatrix ();
+   	glFlush ();
+
+   	hits = glRenderMode (GL_RENDER);
+   	processHits (hits, selectBuf);
+
+   	glutPostRedisplay();
+   }
   }
 //Indicates an action to be taken when a special key is released
   void Boot::specKeyUp(int key, int x, int y){
