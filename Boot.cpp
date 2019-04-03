@@ -69,7 +69,7 @@ int Boot::paused = -1;
      glPopMatrix();
 
      glLoadIdentity();
-     city.draw();
+     city.draw(GL_RENDER);
 
      // Display pause screen if we're paused.
      if (paused == 1)
@@ -186,120 +186,98 @@ void Boot::pauseGame(){
   */
   void Boot::rotateCameras(){
      if (paused == -1){
-    bool change=true;
 	float neweyePoint[3] = {0, 0, 0};
 	switch(viewKey){
 	   case GLUT_KEY_F1:
 	      //forward head facing and default lookat
-	      //robot.head = 0;
+	      robot.head = 0;
 	      neweyePoint[0] = 0;
 	      neweyePoint[1] = 3;
 	      neweyePoint[2] = -4;
-	      change=true;
 	      break;
-	   case GLUT_KEY_F4:
-	      //default lookat
-	      neweyePoint[0] = 0;
-	      neweyePoint[1] = 3;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F5:
-	      //behind on left of robot
-	      neweyePoint[0] = 4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F6:
-	      //behind on right of robot
-	      neweyePoint[0] = -4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = -4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F7:
-	      //front on righ of robot
-	      neweyePoint[0] = -4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = 4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F8:
-	      //front on left of robot
-	      neweyePoint[0] = 4;
-	      neweyePoint[1] = 4;
-	      neweyePoint[2] = 4;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F9:
-	      //behind on left of robot
-	      neweyePoint[0] = 8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = -8;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F10:
-	      //behind on right of robot
-	      neweyePoint[0] = -8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = -8;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F11:
-	      //front on right of robot
-	      neweyePoint[0] = -8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = 8;
-	      change=true;
-	      break;
-	   case GLUT_KEY_F12:
-	      //behind on left of robot
-	      neweyePoint[0] = 8;
-	      neweyePoint[1] = 8;
-	      neweyePoint[2] = 8;
-	      change=true;
-	      break;
-	   default:
-	       change=false;
-	      break;
-	}
-	if(change){
-        if(robot.facing == -1.0f){ //right
-           Boot::eyePoint[0] = -neweyePoint[2];
-           Boot::eyePoint[2] = neweyePoint[0];
-        }else if(robot.facing == 1.0f){ //left
-           Boot::eyePoint[0] = neweyePoint[2];
-           Boot::eyePoint[2] = neweyePoint[0];
-        }else if(robot.facing == 0.0f){ //front
-           Boot::eyePoint[0] = neweyePoint[0];
-           Boot::eyePoint[2] = neweyePoint[2];
-        }if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
-           Boot::eyePoint[0] = neweyePoint[0];
-           Boot::eyePoint[2] = -neweyePoint[2];
-        }
-	}
-     }
-  }
-void Boot::mySpecialKey(int key, int x, int y){
-   if (paused == -1){
-    switch(key){
-    case GLUT_KEY_F1:
-        robot.head = 0;
-        break;
-        case GLUT_KEY_F2:
+	   case GLUT_KEY_F2:
 	      //right head facing
 	      robot.head = 2;
 	      break;
 	   case GLUT_KEY_F3:
 	      //left head facing
 	      robot.head = 1;
-    break;
-       default:
-          viewKey = key;
-          break;
-   };
-     if(viewKey!=GLUT_KEY_F2&&viewKey!=GLUT_KEY_F3)
+	      break;
+	   case GLUT_KEY_F4:
+	      //default lookat
+	      neweyePoint[0] = 0;
+	      neweyePoint[1] = 3;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F5:
+	      //behind on left of robot
+	      neweyePoint[0] = 4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F6:
+	      //behind on right of robot
+	      neweyePoint[0] = -4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = -4;
+	      break;
+	   case GLUT_KEY_F7:
+	      //front on righ of robot
+	      neweyePoint[0] = -4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = 4;
+	      break;
+	   case GLUT_KEY_F8:
+	      //front on left of robot
+	      neweyePoint[0] = 4;
+	      neweyePoint[1] = 4;
+	      neweyePoint[2] = 4;
+	      break;
+	   case GLUT_KEY_F9:
+	      //behind on left of robot
+	      neweyePoint[0] = 8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = -8;
+	      break;
+	   case GLUT_KEY_F10:
+	      //behind on right of robot
+	      neweyePoint[0] = -8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = -8;
+	      break;
+	   case GLUT_KEY_F11:
+	      //front on right of robot
+	      neweyePoint[0] = -8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = 8;
+	      break;
+	   case GLUT_KEY_F12:
+	      //behind on left of robot
+	      neweyePoint[0] = 8;
+	      neweyePoint[1] = 8;
+	      neweyePoint[2] = 8;
+	      break;
+	   default:
+	      break;
+	}
+	if(robot.facing == -1.0f){ //right
+	   Boot::eyePoint[0] = -neweyePoint[2];
+	   Boot::eyePoint[2] = neweyePoint[0];
+	}else if(robot.facing == 1.0f){ //left
+	   Boot::eyePoint[0] = neweyePoint[2];
+	   Boot::eyePoint[2] = neweyePoint[0];
+	}else if(robot.facing == 0.0f){ //front
+	   Boot::eyePoint[0] = neweyePoint[0];
+	   Boot::eyePoint[2] = neweyePoint[2];
+	}if(robot.facing == -2.0f || robot.facing == 2.0f){ //back
+	   Boot::eyePoint[0] = neweyePoint[0];
+	   Boot::eyePoint[2] = -neweyePoint[2];
+	}
+     }
+  }
+void Boot::mySpecialKey(int key, int x, int y){
+   if (paused == -1){
+     viewKey = key;
      Boot::rotateCameras();
    }
   }
@@ -335,35 +313,39 @@ void Boot::mySpecialKey(int key, int x, int y){
   * @param y
   * @return void
   */
-  void Boot::mouseFunctionality(int buttonNum, int btnState, int x, int y) {
-    //rightDown
-    if(buttonNum == GLUT_RIGHT_BUTTON) {
-      if(rightDown == 0 && btnState == GLUT_DOWN) {
-        rightDown = 1;
-        leftDown = 0;
-      }
-    }
-    //leftDown
-    if(buttonNum == GLUT_LEFT_BUTTON) {
-      if(leftDown == 0 && btnState == GLUT_DOWN) {
-        leftDown = 1;
-        rightDown = 0;
-      }
-    }
-    //rightUp
-    if(buttonNum == GLUT_RIGHT_BUTTON) {
-      if(rightDown == 1 && btnState == GLUT_UP) {
-        rightDown = 0;
-        leftDown = 0;
-      }
-    }
-    //rightUp
-    if(buttonNum == GLUT_LEFT_BUTTON) {
-      if(leftDown == 1 && btnState == GLUT_UP) {
-        rightDown = 0;
-        leftDown = 0;
-      }
-    }
+  void Boot::mouseFunctionality(int button, int state, int x, int y) {
+     GLuint selectBuf[16001];
+     GLint hits;
+     GLint viewport[4];
+
+   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) 
+   {
+   	glGetIntegerv (GL_VIEWPORT, viewport);
+
+   	glSelectBuffer (16001, selectBuf);
+   	glRenderMode(GL_SELECT);
+
+   	glInitNames();
+   	glPushName(0);
+
+   	glMatrixMode (GL_PROJECTION);
+   	glPushMatrix ();
+   	glLoadIdentity ();
+	/*  create 5x5 pixel picking region near cursor location	*/
+   	gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y), 
+                  	5.0, 5.0, viewport);
+   	gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
+   	city.draw(GL_SELECT);
+
+
+   	glMatrixMode (GL_PROJECTION);
+   	glPopMatrix ();
+
+   	hits = glRenderMode (GL_RENDER);
+   	processHits (hits, selectBuf);
+
+   	glutPostRedisplay();
+   }
   }
 //Indicates an action to be taken when a special key is released
   void Boot::specKeyUp(int key, int x, int y){
@@ -408,6 +390,34 @@ void Boot::mySpecialKey(int key, int x, int y){
      // Load up the correct perspective matrix; using a callback directly.
      Boot::CallBackResizeScene(Width,Height);
   }
+
+/*  processHits prints out the contents of the 
+ *  selection array.
+ */
+void Boot::processHits (GLint hits, GLuint buffer[])
+{
+   unsigned int i, j;
+   GLint names, *ptr;
+
+   printf ("hits = %d\n", hits);
+   ptr = (GLint *) buffer; 
+   for (i = 0; i < hits; i++) {	/*  for each hit  */
+      names = *ptr;
+	   ptr+=3;
+      for (j = 0; j < names; j++) { /*  for each name */
+         if(*ptr==16000) printf ("red rectangle\n");
+         else if (*ptr == 15999)
+	    printf ("blue rectangle\n");
+	 else if (*ptr == 15998)
+	    printf ("not blue rectangle\n");
+	 else if (*ptr == 15997)
+	    printf ("not noyt blue rectangle\n");
+         ptr++;
+      }
+      printf ("\n");
+   }
+   
+}
 
   ///////////////////////////////////////////////////
   // main() function.                              //

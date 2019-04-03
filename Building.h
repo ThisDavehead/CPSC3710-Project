@@ -27,7 +27,7 @@ class Building
    void createSilo(float radius, float height, int x, int y);
    void createPyramid(float width, float height, float depth);
    
-   void draw();
+   void draw(GLenum mode, int number);
 };
 
 #endif /*BUILDING_H_*/
