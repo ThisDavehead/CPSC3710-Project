@@ -1,11 +1,13 @@
 #include "Building.h"
 #include <cmath>
 
+#include "Boot.h"
+
 Building::Building(float x, float z)
    :xBase(x),zBase(z)
 {
 
-
+   int idNum = 0;
    int random_numbers[5];
    int count =0;
 
@@ -64,6 +66,7 @@ Building::Building(float x, float z)
 }
 
 void Building::attack(){
+  printf("attacking");
    if(health > 0)
       --health;
 }
@@ -159,6 +162,7 @@ void Building::createPyramid(float width, float height, float depth)
     glNormal3f((width/2), 0.0f, 0.0f);
 
     glVertex3f((width/2), -(height/2.0f), -(depth/2));
+
     glVertex3f(0.0f,  (height/2.0f), 0.0f);
     glVertex3f((width/2), -(height/2.0f),  (depth/2));
 
@@ -193,6 +197,9 @@ void Building::createPyramid(float width, float height, float depth)
 }
 
 void Building::draw(GLenum mode, int number){
+  Boot::stencilIndex = Boot::stencilIndex >= 255 ? 255 : Boot::stencilIndex;
+  Boot::buildingIndex[Boot::stencilIndex] = this;
+  glStencilFunc(GL_ALWAYS, Boot::stencilIndex + 1, -1);
    switch (health){
       case 3:
 	 glColor3f(0.3f,0.6f,0.3f);
@@ -242,4 +249,5 @@ void Building::draw(GLenum mode, int number){
       }
       glTranslatef(0.0f, -(height/2.0f), 0.0f);
    }
+  Boot::stencilIndex++;
 }

@@ -8,10 +8,12 @@
 */
 #define PROGRAM_TITLE "Project"
 
+// #include <glm>
 #include "Boot.h"
 
   // Some global variables.
   // Window IDs, window width and height
+  Building* Boot::buildingIndex[256];
   int Boot::Window_ID = 0;
   int Boot::Window_Width = 1000;
   int Boot::Window_Height = 600;
@@ -20,7 +22,7 @@
   int Boot::zcentre = 5;
   float Boot::eyePoint[3] = {0, 3, -4};
   int Boot::viewKey = GLUT_KEY_F4;
-
+int Boot::stencilIndex = 0;
   // Global variable for our robot;
   Robot Boot::robot = Robot();
   Street Boot::network = Street();
@@ -41,8 +43,9 @@ int Boot::paused = -1;
   */
   void Boot::CallBackRenderScene(void){
      // For our strings.
-
-     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+     stencilIndex = 0;
+     glClearStencil(0);
+     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
      glMatrixMode(GL_PROJECTION);
      glLoadIdentity();
@@ -68,12 +71,14 @@ int Boot::paused = -1;
      glPopMatrix();
 
      glLoadIdentity();
+
      city.draw(GL_RENDER);
 
      // Display pause screen if we're paused.
      if (paused == 1)
 	         pauseGame();
      //glFlush();
+
      glutSwapBuffers();
      glFlush();
      // Now let's do the motion calculations.
@@ -329,16 +334,48 @@ void Boot::mySpecialKey(int key, int x, int y){
 
    printf ("hits = %d\n", hits);
    ptr = (GLint *) buffer;
-   for (i = 0; i < hits; i++) {	/*  for each hit  */
+   for (i = 0; i < (unsigned int)hits; i++) {	/*  for each hit  */
        names = *ptr;
 	     ptr+=3;
-      for (j = 0; j < names; j++) { /*  for each name */
+      for (j = 0; j < (unsigned int)names; j++) { /*  for each name */
          city.blocks[*ptr/4].buildings[*ptr%4].attack();
          printf ("Building %d was attacked", *ptr);
-         ptr++;
+         ptr++;GLbyte color[4];
+
       }
       printf ("\n");
+
    }
+
+}
+bool checkHits(int x, int y) {
+  GLbyte color[4];
+  GLfloat depth;
+  GLuint index;
+
+  glReadPixels(x, Boot::Window_Height - y - 1, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+  glReadPixels(x, Boot::Window_Height - y - 1, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+  glReadPixels(x, Boot::Window_Height - y - 1, 1, 1, GL_STENCIL_INDEX, GL_UNSIGNED_INT, &index);
+
+  printf("Clicked on pixel %d, %d, color %02hhx%02hhx%02hhx%02hhx, depth %f, stencil index %u\n",
+         x, y, color[0], color[1], color[2], color[3], depth, index);
+  if (index != 0) {
+    Boot::buildingIndex[index]->attack();
+    printf("%d /n", Boot::buildingIndex[index]->idNum);
+    return true;
+  }
+
+/*
+  glm::vec4 viewport = glm::vec4(0, 0, window_width, window_height);
+  glm::vec3 wincoord = glm::vec3(x, window_height - y - 1, depth);
+  glm::vec3 objcoord = glm::unProject(wincoord, view, projection, viewport);
+
+  printf("Coordinates in object space: %f, %f, %f\n",
+         objcoord.x, objcoord.y, objcoord.z);
+
+*/
+return false;
+
 }
   #define SIZE 16000
   /**
@@ -354,8 +391,12 @@ void Boot::mySpecialKey(int key, int x, int y){
    GLint hits;
    GLint viewport[4];
 
-   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+   if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && viewKey == GLUT_KEY_F4)
    {
+     if (checkHits(x,y)) {
+      printf("HIT/n");
+     } else { printf("MISS/n"); }
+
    	glGetIntegerv (GL_VIEWPORT, viewport);
 
    	glSelectBuffer (SIZE, selectBuf);
@@ -369,7 +410,7 @@ void Boot::mySpecialKey(int key, int x, int y){
    	glLoadIdentity ();
     //glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 60.0);
     //gluLookAt(robot.point[0] + Boot::eyePoint[0], robot.point[1] + Boot::eyePoint[1] , robot.point[2] + Boot::eyePoint[2], robot.point[0], robot.point[1]+1, robot.point[2], 0,1,0);
-		/*  create 5x5 pixel picking region near cursor location	*/
+		//  create 5x5 pixel picking region near cursor location	/
    	gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y), 5.0, 5.0, viewport);
    	gluPerspective(45.0f,((GLfloat)Window_Width)/((GLfloat)Window_Height),0.1f,10000.0f);
     //gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
@@ -384,6 +425,7 @@ void Boot::mySpecialKey(int key, int x, int y){
    	processHits (hits, selectBuf);
 
    	glutPostRedisplay();
+
    }
   }
 //Indicates an action to be taken when a special key is released
@@ -446,7 +488,7 @@ void Boot::mySpecialKey(int key, int x, int y){
      glutInit(&argc, argv);
 
      // To see OpenGL drawing, take out the GLUT_DOUBLE request.
-     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
+     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_STENCIL);
 
      // The following is for window creation.
      // Set Window size

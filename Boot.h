@@ -40,7 +40,8 @@ class Boot
     static void MyInit(int Width, int Height);
     static void specKeyUp(int key, int x, int y);
     static void processHits (GLint hits, GLuint buffer[]);
-
+    static int stencilIndex;
+    static Building* buildingIndex[256];
 };
 
 #endif /*BOOT_H_*/

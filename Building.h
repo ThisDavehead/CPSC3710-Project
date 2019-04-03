@@ -21,12 +21,12 @@ class Building
    int health;
    int type;
    int shape;
+   int idNum;
    Building(float x=0, float z=0);
    void attack();
    void createBox(float width, float height, float depth);
    void createSilo(float radius, float height, int x, int y);
    void createPyramid(float width, float height, float depth);
-
    void draw(GLenum mode, int number);
 };
 
