@@ -192,7 +192,7 @@ void Building::createPyramid(float width, float height, float depth)
   glEnd();
 }
 
-void Building::draw(){
+void Building::draw(GLenum mode, int number){
    switch (health){
       case 3:
 	 glColor3f(0.3f,0.6f,0.3f);
@@ -219,19 +219,23 @@ void Building::draw(){
       switch (shape)
       {
 	 case 0:
-      
+   if(mode == GL_SELECT)
+ 		glLoadName(number);
 	    createBox(width,height,depth);
 	    break;
 	 case 1:
-
+   if(mode == GL_SELECT)
+ 		glLoadName(number);
 	    createSilo(width/2,height/2,0.0,0);
 	    break;
 	 case 2:
-
+   if(mode == GL_SELECT)
+ 		glLoadName(number);
 	    createPyramid(width,height,depth);
 	    break;
 	 default:
-
+   if(mode == GL_SELECT)
+ 		glLoadName(number);
 	    glColor3f(1.0f,0.0f,1.0f);
 	    createBox(width,height,depth);
 	    break;

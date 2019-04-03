@@ -73,7 +73,7 @@ int Boot::paused = -1;
      // Display pause screen if we're paused.
      if (paused == 1)
 	         pauseGame();
-
+     //glFlush();
      glutSwapBuffers();
      glFlush();
      // Now let's do the motion calculations.
@@ -330,8 +330,8 @@ void Boot::mySpecialKey(int key, int x, int y){
    printf ("hits = %d\n", hits);
    ptr = (GLint *) buffer;
    for (i = 0; i < hits; i++) {	/*  for each hit  */
-      names = *ptr;
-	   ptr+=3;
+       names = *ptr;
+	     ptr+=3;
       for (j = 0; j < names; j++) { /*  for each name */
          city.blocks[*ptr/4].buildings[*ptr%4].attack();
          printf ("Building %d was attacked", *ptr);
@@ -365,19 +365,20 @@ void Boot::mySpecialKey(int key, int x, int y){
    	glPushName(0);
 
    	glMatrixMode (GL_PROJECTION);
-   	glPushMatrix ();
+    glPushMatrix ();
    	glLoadIdentity ();
+    //glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 60.0);
+    //gluLookAt(robot.point[0] + Boot::eyePoint[0], robot.point[1] + Boot::eyePoint[1] , robot.point[2] + Boot::eyePoint[2], robot.point[0], robot.point[1]+1, robot.point[2], 0,1,0);
 		/*  create 5x5 pixel picking region near cursor location	*/
-   	gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y),
-                  	5.0, 5.0, viewport);
+   	gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y), 5.0, 5.0, viewport);
    	gluPerspective(45.0f,((GLfloat)Window_Width)/((GLfloat)Window_Height),0.1f,10000.0f);
     //gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
    	city.draw(GL_SELECT);
 
 
    	glMatrixMode (GL_PROJECTION);
-   	glPopMatrix ();
-   	glFlush ();
+   	glPopMatrix();
+   	glFlush();
 
    	hits = glRenderMode (GL_RENDER);
    	processHits (hits, selectBuf);
