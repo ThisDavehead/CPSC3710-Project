@@ -13,7 +13,7 @@
 
   // Some global variables.
   // Window IDs, window width and height
-  Building* Boot::buildingIndex[256];
+  Building* Boot::buildingIndex[512];
   int Boot::Window_ID = 0;
   int Boot::Window_Width = 1000;
   int Boot::Window_Height = 600;
@@ -42,6 +42,10 @@ int Boot::paused = -1;
   * @return void
   */
   void Boot::CallBackRenderScene(void){
+     //std::fill(Boot::buildingIndex.begin(),Boot::buildingIndex.end(),NULL);
+     //for (int i = 0; i < 255; i++) {
+        //Boot::buildingIndex[i] = NULL;
+    // }
      // For our strings.
      stencilIndex = 0;
      glClearStencil(0);

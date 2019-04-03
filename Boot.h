@@ -41,7 +41,7 @@ class Boot
     static void specKeyUp(int key, int x, int y);
     static void processHits (GLint hits, GLuint buffer[]);
     static int stencilIndex;
-    static Building* buildingIndex[256];
+    static Building* buildingIndex[512];
 };
 
 #endif /*BOOT_H_*/

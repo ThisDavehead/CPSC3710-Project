@@ -197,9 +197,9 @@ void Building::createPyramid(float width, float height, float depth)
 }
 
 void Building::draw(GLenum mode, int number){
-  Boot::stencilIndex = Boot::stencilIndex >= 255 ? 255 : Boot::stencilIndex;
-  Boot::buildingIndex[Boot::stencilIndex] = this;
-  glStencilFunc(GL_ALWAYS, Boot::stencilIndex + 1, -1);
+  //Boot::stencilIndex = Boot::stencilIndex >= 255 ? 255 : Boot::stencilIndex;
+  //Boot::buildingIndex[Boot::stencilIndex] = this;
+  //glStencilFunc(GL_ALWAYS, Boot::stencilIndex + 1, -1);
    switch (health){
       case 3:
 	 glColor3f(0.3f,0.6f,0.3f);
@@ -222,6 +222,9 @@ void Building::draw(GLenum mode, int number){
    }
    if (health != 0)
    {
+     Boot::stencilIndex = Boot::stencilIndex >= 255 ? 255 : Boot::stencilIndex;
+    Boot::buildingIndex[Boot::stencilIndex+ 1] = this;
+    glStencilFunc(GL_ALWAYS, Boot::stencilIndex + 1, -1);
       glTranslatef(0.0f, height/2.0f, 0.0f);
       switch (shape)
       {
