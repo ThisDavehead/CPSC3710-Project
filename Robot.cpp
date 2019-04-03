@@ -175,13 +175,13 @@ void Robot::draw(float x, float y, float z){
 }
 
 void Robot::move(){
-    if(facing == 0.0f && point[2] < 999){
+    if(facing == 0.0f && point[2] < 880){ //forward
       point[2] += 1;
-    } else if(facing == 1.0f && point[0] < 4){
+    } else if(facing == 1.0f && point[0] < 0){ //left
       point[0] += 1;
-    } else if(facing == -1.0f && point[0] > -999){
+    } else if(facing == -1.0f && point[0] > -880){ // right
       point[0] -= 1;
-    } else if((facing == 2.0f || facing == -2.0f) && point[2] > -4){
+    } else if((facing == 2.0f || facing == -2.0f) && point[2] > 1){// Back
       point[2] -= 1;
     }
     antennaAngle += 10.0f;

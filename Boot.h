@@ -13,6 +13,7 @@
 #include "Block.h"
 #include "Building.h"
 #include "Street.h"
+#include "City.h"
 
 class Boot
 {
@@ -27,7 +28,7 @@ class Boot
     static int paused;
     static Robot robot;
     static Street network;
-    static Block *blocks;
+    static City city;
     static float eyePoint[3];
     static void rotateCameras();
     static void CallBackRenderScene(void);

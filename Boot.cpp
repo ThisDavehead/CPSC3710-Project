@@ -18,13 +18,14 @@
   int Boot::rightDown = 0;
   int Boot::leftDown = 0;
   int Boot::zcentre = 5;
-  float Boot::eyePoint[3] = {0, 2, 4};
+  float Boot::eyePoint[3] = {0, 3, 4};
   int Boot::viewKey = GLUT_KEY_F4;
 
   // Global variable for our robot;
   Robot Boot::robot = Robot();
   Street Boot::network = Street();
-  Block* Boot::blocks = new Block[4000];
+  City Boot::city = City();
+  //Block* Boot::blocks = new Block[4000];
 
   // Global variable for whether our game is paused or not
 int Boot::paused = -1;
@@ -67,23 +68,8 @@ int Boot::paused = -1;
      network.draw();
      glPopMatrix();
 
-    glLoadIdentity();
-    glTranslatef(-22.0f, -2.50f, 22.0f);
-    for (int i = 0; i < 20; i++) {
-       if(i != 0){
-         glLoadIdentity();
-         glTranslatef(-22.0f, -2.50f, 22.0f);
-         glTranslatef(0.0f, 0.0f, 44.0f*i);
-       }
-       for (int j = 0; j < 20; j++) {
-         if(j != 0){
-           glTranslatef(-44.0f, 0.0f, 0.0f);
-         }
-         glColor3f( 0.45f, 0.7f, 0.45f );
-         blocks[i*20+j].draw();
-       }
-
-     }
+     glLoadIdentity();
+     city.draw();
 
      // Display pause screen if we're paused.
      if (paused == 1)
@@ -175,6 +161,7 @@ void Boot::pauseGame(){
         case 122: // z push forward
 	   if (paused == -1)
 	      robot.move();
+        printf ("x: %d z: %d\n", robot.point[0], robot.point[2]);
 	   break;
          case 101:  // e
          glEnable(GL_DEPTH_TEST);
@@ -311,7 +298,7 @@ void Boot::mySpecialKey(int key, int x, int y){
      glViewport(0, 0, Width, Height);
      glMatrixMode(GL_PROJECTION);
      glLoadIdentity();
-     gluPerspective(45.0f,((GLfloat)Width)/((GLfloat)Height),0.1f,500.0f);
+     gluPerspective(45.0f,((GLfloat)Width)/((GLfloat)Height),0.1f,10000.0f);
      //set matix mode to modelview
      glMatrixMode(GL_MODELVIEW);
      glLoadIdentity();
@@ -410,6 +397,8 @@ void Boot::mySpecialKey(int key, int x, int y){
   ///////////////////////////////////////////////////
   int main(int argc, char **argv)
   {
+    time_t t;
+    srand((unsigned) time(&t));
     //InitOpenGL
      glutInit(&argc, argv);
 

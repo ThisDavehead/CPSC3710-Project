@@ -1,7 +1,7 @@
-#ifndef BLOCK_H
-#define BLOCK_H
+#ifndef CITY_H
+#define CITY_H
 
-#include "Building.h"
+#include "Block.h"
 #include <stdlib.h>  // Useful for the following includes.
 #include <stdio.h>
 #include <vector>
@@ -10,15 +10,12 @@
 #include <GL/glu.h>  // GLU support library.
 #include <GL/glut.h> // GLUT support library.
 
-class Block
+class City
 {
   public:
     void draw();
-    Block();
-    Block(int x);
-    //void init();
-    Building buildings[4];
-    void createBox(float width, float height, float depth);
+    City();
+    Block blocks[4000];
 };
 
 #endif /*BUILDING_H_*/

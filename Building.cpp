@@ -5,12 +5,9 @@ Building::Building(float x, float z)
    :xBase(x),zBase(z)
 {
 
-   time_t t;
+
    int random_numbers[5];
    int count =0;
-
-
-   srand((unsigned) time(&t));
 
    while(count < 5) {
       int randNum =rand(); //Generate a random number
@@ -31,20 +28,20 @@ Building::Building(float x, float z)
       }
    }
 
-    // randomize building's height from 10 to 30
-   height = abs(fmod(random_numbers[3], 21.0)) + 10.0;
+    // randomize building's height from 20 to 40
+   height = abs(fmod(rand(), 21.0)) + 20.0;
 
-   // width 5-8
-   width = abs(fmod(random_numbers[0], 4.0)) + 5.0;
+   // width 12-15
+   width = abs(fmod(rand(), 4.0)) + 12.0;
 
-   // depth always 5-8
-   depth = abs(fmod(random_numbers[2], 4.0)) + 5.0;
+   // depth always 12-15
+   depth = abs(fmod(rand(), 4.0)) + 12.0;
 
    //type 0-2, set health accordingly
-   type = abs(int(random_numbers[1])) % 3;
+   type = abs(int(rand())) % 3;
 
       //shape 0-2
-   shape = abs(int(random_numbers[4])) % 3;
+   shape = abs(int(rand())) % 3;
 
    // set health according to type
    switch (type)
@@ -131,7 +128,7 @@ void Building::createSilo(float radius, float height, int x, int y){
    GLUquadricObj *silo;
    silo = gluNewQuadric();
    glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-   gluCylinder(silo,radius,radius,y,15,15);
+   gluCylinder(silo,radius,radius,height,15,15);
    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
    glColor3f(0.0f,0.0f,1.0f);
    /*float x1,y1,x2,y2;
@@ -198,16 +195,16 @@ void Building::createPyramid(float width, float height, float depth)
 void Building::draw(){
    switch (health){
       case 3:
-	 glColor3f(0.0,1.0,0.0);
+	 glColor3f(0.3f,0.6f,0.3f);
 	 break;
       case 2:
-	 glColor3f(1.0,1.0,0.0);
+	 glColor3f(0.6f,0.6f,0.3f);
 	 break;
       case 1:
-	 glColor3f(1.0,0.0,0.0);
+	 glColor3f(0.6f,0.3f,0.3f);
 	 break;
       case 0:
-	 glColor3f(0.0,0.0,1.0);
+	 glColor3f(0.3f,0.3f,0.6f);
 	 break;
       case -1:
 	 glColor3f(0.5,0.5,0.5);
@@ -225,7 +222,7 @@ void Building::draw(){
 	    createBox(width,height,depth);
 	    break;
 	 case 1:
-	    createSilo(width/2,height,0.0,height);
+	    createSilo(width/2,height/2,0.0,0);
 	    break;
 	 case 2:
 	    createPyramid(width,height,depth);
